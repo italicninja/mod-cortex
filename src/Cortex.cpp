@@ -70,6 +70,7 @@ namespace
     bool sWand = true;
     bool sTidyBags = true;
     bool sTalents = true;
+    bool sRevisit = true;
     constexpr uint32 TALENT_CHECK_MS = MINUTE * IN_MILLISECONDS;
     constexpr uint32 TIDY_MS = 5 * MINUTE * IN_MILLISECONDS;
     float sSightRange = 100.0f;
@@ -566,6 +567,7 @@ namespace
             npc.y = creature->GetPositionY();
             npc.z = creature->GetPositionZ();
             npc.lastSeen = now;
+            npc.seenLevel = static_cast<uint8>(bot->GetLevel());
             npc.services = services;
             if (services & CortexMemory::SERVICE_CLASS_TRAINER)
                 npc.trainerClass = TrainerClassFromTitle(creature);
@@ -812,18 +814,21 @@ void Cortex::LoadConfig()
     sWand = sConfigMgr->GetOption<bool>("Cortex.Wand", true);
     sTidyBags = sConfigMgr->GetOption<bool>("Cortex.TidyBags", true);
     sTalents = sConfigMgr->GetOption<bool>("Cortex.Talents", true);
+    sRevisit = sConfigMgr->GetOption<bool>("Cortex.Revisit", true);
     CortexTravel::LoadConfig();
     CortexNeeds::LoadConfig();
 
     // A missing module config leaves Cortex off; this line makes that obvious in the startup log.
     LOG_INFO("server.loading", "Cortex: Enable {}, Ratio {:.2f}, Act {}, Perception {}, PerceiveMs {}, SightRange {}, "
              "SaveMinutes {}, Tame {}, Gather {}, GatherTripRange {}, Sparkles {}, Watchdog {}, Escape {}, CorpseRun {}, Regroup {}, "
-             "Wand {}, TidyBags {}, Talents {}",
+             "Wand {}, TidyBags {}, Talents {}, Revisit {}",
              sEnabled, ratio, sActing, sPerception, sPerceiveMs, sSightRange, sSaveMinutes, sTaming, sGathering,
-             sGatherTripRange, sSparkles, sWatchdog, sEscape, sCorpseRun, sRegroup, sWand, sTidyBags, sTalents);
+             sGatherTripRange, sSparkles, sWatchdog, sEscape, sCorpseRun, sRegroup, sWand, sTidyBags, sTalents,
+             sRevisit);
 }
 
 bool Cortex::Enabled() { return sEnabled; }
+bool Cortex::Revisit() { return sEnabled && sRevisit; }
 
 bool Cortex::InArm(Player const* bot)
 {

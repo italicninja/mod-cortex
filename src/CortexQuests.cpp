@@ -58,6 +58,9 @@ namespace
     constexpr uint32 AVOID_SECONDS = 30 * MINUTE;
     constexpr float PICK_UP_RANGE = 2500.0f;
     constexpr uint32 PICK_UP_MEMORY_SECONDS = 6 * HOUR;
+    // Givers whose quests are only for their class or trade: nothing new for a levelling bot there.
+    constexpr uint32 REVISIT_SKIP_SERVICES =
+        CortexMemory::SERVICE_CLASS_TRAINER | CortexMemory::SERVICE_PROFESSION_TRAINER;
     constexpr float GRIND_MIN_RANGE = 60.0f;
     constexpr float GRIND_MAX_RANGE = 1500.0f;
     constexpr uint32 GRIND_MEMORY_SECONDS = 3 * HOUR;
@@ -66,7 +69,7 @@ namespace
     // gnolls, which it found too rarely to gain anything, and never looked further (FarGrindSpot).
     constexpr uint8 GRIND_LEVELS_BELOW = 3;
     constexpr uint32 GRIND_FAR_CHECKS = 8;
-    constexpr uint32 SAFE_WALK_CHECKS = 6;  // nearest grind spots or givers looked at for a safe walk there  // nearest level spots checked for a way there (CortexTravel::Reachable)
+    constexpr uint32 SAFE_WALK_CHECKS = 6;  // nearest grind spots or givers looked at for a safe walk there
 
     constexpr uint32 MAX_AREA_TRIGGER_ID = 20000;
     constexpr uint32 REMOTE_HAND_IN_CHECKS = 3;  // remote turn-ins tested for a trip per re-plan
@@ -455,8 +458,19 @@ namespace
     // giver past a zone well above the bot only made Travel give up on it, over and over, one spot after another.
     bool SafeWalk(Player* bot, uint32 map, float x, float y)
     {
-        return !CortexTravel::Enabled() || map != bot->GetMapId() ||
+        return !CortexTravel::Enabled() || !CortexTravel::Recheck() || map != bot->GetMapId() ||
                !CortexTravel::DangerousWalk(bot, bot->GetPositionX(), bot->GetPositionY(), x, y);
+    }
+
+    // A quest giver the bot saw at a lower level: a player who has levelled goes back through the towns it knows,
+    // since a giver with no "!" (or a grey one) then may have one now. Half the bots that ground had a giver with an
+    // open quest for them within 2500 yd, remembered only from before their last level.
+    bool WorthRevisit(CortexMemory::Npc const& npc, uint8 level)
+    {
+        return (npc.services & CortexMemory::SERVICE_QUESTGIVER) && !(npc.services & REVISIT_SKIP_SERVICES) &&
+               npc.seenLevel < level &&
+               (npc.marker == DIALOG_STATUS_NONE || npc.marker == DIALOG_STATUS_UNAVAILABLE ||
+                npc.marker == DIALOG_STATUS_AVAILABLE || npc.marker == DIALOG_STATUS_AVAILABLE_REP);
     }
 
     bool PickUpDestination(Player* bot, CortexPlan& plan, CortexMemory const& memory)
@@ -465,24 +479,41 @@ namespace
             return false;
 
         uint32 now = static_cast<uint32>(GameTime::GetGameTime().count());
-        std::vector<std::pair<float, CortexMemory::Npc const*>> givers;
+        uint8 level = static_cast<uint8>(bot->GetLevel());
+        bool revisit = Cortex::Revisit();
+        // Remembered "!" first (revisit false), then givers last seen at a lower level, nearest first in each.
+        std::vector<std::tuple<bool, float, CortexMemory::Npc const*>> givers;
         for (auto const& [key, npc] : memory.Npcs())
         {
-            if (npc.map != bot->GetMapId() || now - npc.lastSeen > PICK_UP_MEMORY_SECONDS)
+            if (npc.map != bot->GetMapId())
                 continue;
-            if (npc.marker != DIALOG_STATUS_AVAILABLE && npc.marker != DIALOG_STATUS_AVAILABLE_REP)
+            bool marked = (npc.marker == DIALOG_STATUS_AVAILABLE || npc.marker == DIALOG_STATUS_AVAILABLE_REP) &&
+                          now - npc.lastSeen <= PICK_UP_MEMORY_SECONDS;
+            if (!marked && !(revisit && WorthRevisit(npc, level)))
                 continue;
             float d = bot->GetExactDist2d(npc.x, npc.y);
             // A giver the bot got stuck walking to (just now, or hearthed out of before): the next one instead.
             if (d < PICK_UP_RANGE && !CortexQuests::IsAvoided(plan, npc.map, npc.x, npc.y) &&
                 !memory.SpotBlocked(npc.map, npc.x, npc.y, now))
-                givers.emplace_back(d, &npc);
+                givers.emplace_back(!marked, d, &npc);
         }
-        std::sort(givers.begin(), givers.end(), [](auto const& a, auto const& b) { return a.first < b.first; });
+        std::sort(givers.begin(), givers.end(), [](auto const& a, auto const& b)
+                  { return std::tie(std::get<0>(a), std::get<1>(a)) < std::tie(std::get<0>(b), std::get<1>(b)); });
         CortexMemory::Npc const* pick = nullptr;
-        for (uint32 i = 0; i < givers.size() && i < SAFE_WALK_CHECKS && !pick; ++i)
-            if (SafeWalk(bot, givers[i].second->map, givers[i].second->x, givers[i].second->y))
-                pick = givers[i].second;
+        bool pickRevisit = false;
+        // Safe-walk checks per kind, so a run of unsafe "!"s doesn't use up the look at the revisits.
+        uint32 checks[2] = {0, 0};
+        for (auto const& [isRevisit, d, npc] : givers)
+        {
+            if (checks[isRevisit]++ >= SAFE_WALK_CHECKS)
+                continue;
+            if (SafeWalk(bot, npc->map, npc->x, npc->y))
+            {
+                pick = npc;
+                pickRevisit = isRevisit;
+                break;
+            }
+        }
         if (!pick)
             return false;
 
@@ -491,6 +522,7 @@ namespace
         plan.destY = pick->y;
         plan.destZ = pick->z;
         plan.hasDest = true;
+        plan.revisit = pickRevisit;
         return true;
     }
 
@@ -598,6 +630,7 @@ void CortexQuests::Build(Player* bot, CortexPlan& plan, CortexMemory const& memo
     plan.cluster = -1;
     plan.handIn = -1;
     plan.hasDest = false;
+    plan.revisit = false;
     plan.goal = CortexGoal::NONE;
 
     uint32 map = bot->GetMapId();

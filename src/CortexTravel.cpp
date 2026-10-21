@@ -27,6 +27,8 @@ namespace
     bool sLearnFlights = true;
     bool sCrossMap = true;
     bool sHearth = true;
+    bool sHighZones = true;
+    bool sRecheck = true;
 
     enum Region : uint8
     {
@@ -252,6 +254,8 @@ namespace
             return hazards;
         uint32 now = static_cast<uint32>(GameTime::GetGameTime().count());
         hazards.deaths = memory->Outclassed(map, now - DANGER_WINDOW, DANGER_LEVELS);
+        if (!sHighZones)
+            return hazards;
         // Only what was hostile to it (a red name): a neutral goblin bruiser in Ratchet or a Cenarion druid in
         // Moonglade is far above a level 18 too, and at first marked the Barrens, Moonglade and towns as high zones.
         uint8 minLevel =
@@ -621,8 +625,10 @@ void CortexTravel::LoadConfig()
     sLearnFlights = sConfigMgr->GetOption<bool>("Cortex.Travel.LearnFlights", true);
     sCrossMap = sConfigMgr->GetOption<bool>("Cortex.Travel.CrossMap", true);
     sHearth = sConfigMgr->GetOption<bool>("Cortex.Travel.Hearth", true);
-    LOG_INFO("server.loading", "Cortex: Travel {}, Flights {}, LearnFlights {}, CrossMap {}, Hearth {}, {} links", sEnabled,
-             sFlights, sLearnFlights, sCrossMap, sHearth, LINK_COUNT);
+    sHighZones = sConfigMgr->GetOption<bool>("Cortex.Travel.HighZones", true);
+    sRecheck = sConfigMgr->GetOption<bool>("Cortex.Travel.Recheck", true);
+    LOG_INFO("server.loading", "Cortex: Travel {}, Flights {}, LearnFlights {}, CrossMap {}, Hearth {}, HighZones {}, Recheck {}, {} links",
+             sEnabled, sFlights, sLearnFlights, sCrossMap, sHearth, sHighZones, sRecheck, LINK_COUNT);
 }
 
 bool CortexTravel::Enabled() { return sEnabled; }
@@ -634,6 +640,8 @@ bool CortexTravel::LearnFlights() { return sLearnFlights; }
 bool CortexTravel::CrossMap() { return sEnabled && sCrossMap; }
 
 bool CortexTravel::Hearth() { return sEnabled && sHearth; }
+
+bool CortexTravel::Recheck() { return sEnabled && sRecheck; }
 
 bool CortexTravel::DangerousWalk(Player* bot, float x1, float y1, float x2, float y2)
 {

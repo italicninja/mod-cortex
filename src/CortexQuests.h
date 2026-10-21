@@ -182,6 +182,7 @@ struct CortexPlan
     float destY = 0.0f;
     float destZ = 0.0f;
     bool hasDest = false;
+    bool revisit = false;  // PICK_UP: back to givers last seen at a lower level, no "!" known (Cortex.Revisit)
 
     // Patience: a bot still killing in the area keeps at it past the no-progress timer, up to a cap.
     uint32 lastKillMs = 0;

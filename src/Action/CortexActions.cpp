@@ -217,6 +217,8 @@ bool CortexThinkAction::Execute(Event /*event*/)
         if (bot->GetQuestSlotQuestId(slot))
             ++quests;
     std::string info = std::string(CortexQuests::GoalName(plan->goal)) + " quests " + std::to_string(quests);
+    if (plan->goal == CortexGoal::PICK_UP && plan->revisit)
+        info += " revisit";
     BotTelemetry::instance().Event(botAI, "plan", info, static_cast<int32>(plan->tasks.size()),
                                    static_cast<int32>(plan->clusters.size()), plan->cluster);
     return true;
@@ -633,7 +635,7 @@ bool CortexStepAction::Search(CortexPlan& plan, CortexCluster& cluster)
     bool stuck = false;
     bool moved = next->cave ? Travel(plan, cluster.map, next->x, next->y, next->z, stuck, cluster.mapArea)
                             : MoveToGround(plan, cluster.map, next->x, next->y, stuck, cluster.mapArea);
-    if (stuck && plan.travelDanger)
+    if (stuck && plan.travelDanger && CortexTravel::Recheck())
         ShelveCluster(plan, cluster, "danger");
     else if (stuck)
         next->searched = true;
@@ -1237,6 +1239,7 @@ bool CortexStepAction::PickUp(CortexPlan& plan, CortexMemory& memory)
     // while, since the giver may still show a "!" for a quest the bot won't take.
     if (getMSTimeDiff(plan.arrivedMs, now) >= PICK_UP_WAIT_MS)
     {
+        BotTelemetry::instance().Event(botAI, "pick_up", plan.revisit ? "revisit empty" : "marker empty");
         memory.ClearMarkersNear(plan.destMap, plan.destX, plan.destY, PICK_UP_ARRIVE,
                                 static_cast<uint8>(bot->GetLevel()));
         CortexQuests::Avoid(plan, plan.destMap, plan.destX, plan.destY);
@@ -1538,7 +1541,7 @@ bool CortexStepAction::Travel(CortexPlan& plan, uint32 map, float x, float y, fl
             plan.safeX = bot->GetPositionX();
             plan.safeY = bot->GetPositionY();
         }
-        if (!plan.travelSplit && d > DANGER_CHECK_MIN &&
+        if (CortexTravel::Recheck() && !plan.travelSplit && d > DANGER_CHECK_MIN &&
             CortexTravel::DangerousWalk(bot, bot->GetPositionX(), bot->GetPositionY(), x, y))
         {
             if (plan.tripsForTarget < TRIPS_PER_TARGET && StartTrip(plan, map, x, y, z, mapArea, false, "ahead"))

@@ -125,6 +125,7 @@ void CortexMemory::ClearMarkersNear(uint32 map, float x, float y, float range, u
             if (npc.marker)
                 _nothingOffered[npc.entry] = level;
             npc.marker = 0;
+            npc.seenLevel = std::max(npc.seenLevel, level);
         }
 }
 
@@ -361,7 +362,7 @@ std::string CortexMemory::Serialize() const
     out << FORMAT_VERSION << '\n';
     for (auto const& [key, n] : _npcs)
         out << "N " << n.entry << ' ' << n.map << ' ' << n.x << ' ' << n.y << ' ' << n.z << ' ' << n.lastSeen << ' '
-            << n.services << ' ' << uint32(n.trainerClass) << ' ' << uint32(n.marker) << ' ' << n.sightings << '\n';
+            << n.services << ' ' << uint32(n.trainerClass) << ' ' << uint32(n.marker) << ' ' << n.sightings << ' ' << uint32(n.seenLevel) << '\n';
     for (auto const& [key, m] : _mobs)
         out << "M " << m.entry << ' ' << m.map << ' ' << m.cell << ' ' << m.lastSeen << ' ' << uint32(m.minLevel)
             << ' ' << uint32(m.maxLevel) << ' ' << uint32(m.maxCount) << ' ' << uint32(m.elite) << ' ' << m.sightings
@@ -414,7 +415,11 @@ bool CortexMemory::Deserialize(std::string const& data)
                 if (Read(in, n.entry) && ReadNarrow(in, n.map) && Read(in, n.x) && Read(in, n.y) && Read(in, n.z) &&
                     Read(in, n.lastSeen) && Read(in, n.services) && ReadNarrow(in, n.trainerClass) &&
                     ReadNarrow(in, n.marker) && ReadNarrow(in, n.sightings))
+                {
+                    // Added later: absent from older records.
+                    ReadNarrow(in, n.seenLevel);
                     _npcs[EntryKey(n.entry, CellKey(n.map, n.x, n.y))] = n;
+                }
                 break;
             }
             case 'M':

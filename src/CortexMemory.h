@@ -66,6 +66,7 @@ public:
         uint8 trainerClass = 0;  // read from the title, e.g. <Warrior Trainer>
         uint8 marker = 0;        // QuestGiverStatus the bot saw over its head
         uint16 sightings = 0;
+        uint8 seenLevel = 0;     // the bot's level when it last saw it (0: not recorded)
     };
 
     struct Mob
@@ -179,9 +180,9 @@ public:
     uint16 Kills(uint32 entry) const;
     bool HasCellTag(uint32 map, float x, float y, uint8 tag) const;
     static void CellCentre(uint64 cell, float& x, float& y);
-    // The bot went to a remembered "!" and found nothing to take there. The givers there are remembered as offering
+    // The bot went to a remembered "!", or back to givers it saw at a lower level, and found nothing to take there. The givers there are remembered as offering
     // nothing at this level: their "!" (a seasonal quest, a turn-in that wants items, a chain the bot isn't on) is
-    // not marked again until the bot levels.
+    // not marked again until the bot levels, and they count as checked at this level.
     void ClearMarkersNear(uint32 map, float x, float y, float range, uint8 level);
     bool NothingOffered(uint32 entry, uint8 level) const;
 

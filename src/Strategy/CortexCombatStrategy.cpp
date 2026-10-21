@@ -41,7 +41,7 @@ public:
     float GetValue(Action* action) override
     {
         CastSpellAction* cast = dynamic_cast<CastSpellAction*>(action);
-        if (!cast || dynamic_cast<CastShootAction*>(action) || !Wanding())
+        if (!Cortex::Wands() || !cast || dynamic_cast<CastShootAction*>(action) || !Wanding())
             return 1.0f;
         return CostlyDamage(cast->getSpell()) ? 0.0f : 1.0f;
     }

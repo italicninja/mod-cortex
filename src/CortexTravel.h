@@ -135,6 +135,9 @@ namespace CortexTravel
     // well above its level, or through cells where it has seen mobs well above it (B3 route exposure; its own
     // memory only).
     bool DangerousWalk(Player* bot, float x1, float y1, float x2, float y2);
+    // Cortex.Travel.Recheck: the rest of a walk is looked at again on the way, grind spots and givers past a walk to
+    // avoid aren't picked, and a search point a danger walk away sets its cluster aside.
+    bool Recheck();
     // The bot stands among mobs well above it: several such cells within `radius`.
     bool OutOfDepth(Player* bot, float radius);
     // Whether some trip reaches (map, x, y) from where the bot is (remote hand-ins).

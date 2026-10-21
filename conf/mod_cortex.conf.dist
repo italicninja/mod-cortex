@@ -100,6 +100,13 @@ Cortex.TidyBags = 1
 # Default: 1
 Cortex.Talents = 1
 
+# Revisit (needs Act): with no remembered "!" to go to, a bot goes back to quest givers it last saw at a lower
+# level (not class or profession trainers), nearest first and only by a safe walk: quests may have opened up since.
+# Each place costs one trip per level. Telemetry: "plan" info "pick_up ... revisit"; "pick_up" "revisit empty" when
+# nothing was there to take.
+# Default: 1
+Cortex.Revisit = 1
+
 # Travel: a place walking can't reach (Rut'theran, Darnassus from Darkshore, Thunder Bluff and Undercity up or down
 # their lifts, another continent) gets a trip of flights, boats and zeppelins, lifts, the Rut'theran portals and
 # Teleport: Moonglade, and so does a walk that got stuck, before the quest is set aside as unreachable. Telemetry
@@ -117,6 +124,20 @@ Cortex.Travel.Flights = 1
 Cortex.Travel.LearnFlights = 1
 Cortex.Travel.CrossMap = 1
 Cortex.Travel.Hearth = 1
+
+# Travel.HighZones (needs Travel): a walk through a zone well above the bot (3 cells within 120 yd of the line where
+# it has seen hostile mobs 6+ levels above it, of 2 kinds or more) is avoided like one past a recent death: another
+# way, or the target waits for the next level or 2 h ("danger"; the quest is never dropped). Re-checked every 15 s
+# on the way; a bot among such mobs walks back to where it last walked clear of them ("retreat"). Off, only deaths
+# to mobs 5+ levels above it in the last 2 h mark a route.
+# Default: 1
+Cortex.Travel.HighZones = 1
+
+# Travel.Recheck (needs Travel): the rest of a walk is looked at again every 15 s for a way to avoid (deaths, high
+# zones); grind spots and quest givers past such a walk aren't picked; a search point in a quest area that is only
+# reached that way sets the quest area aside for 2 h. Off, a walk is looked at once, when the target is chosen.
+# Default: 1
+Cortex.Travel.Recheck = 1
 # Needs from memory (plan.md B2c): selling, repairs, ammo and pet food (Playerbots.NewRpgUpkeep), the class trainer,
 # profession trainers and the inn (Playerbots.NewRpgTrainer) and the auction house (Playerbots.NewRpgAuction) go to
 # the nearest place the bot remembers seeing, walking or by a trip, within VendorRange yd for vendors and TrainerRange

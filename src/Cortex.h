@@ -45,6 +45,9 @@ namespace Cortex
     bool Regrouping();
     // Cortex.Wand: casters in the acting arm shoot their wand rather than spend their last mana ("cortex combat").
     bool Wands();
+    // Cortex.Revisit: with no "!" known, a bot that has levelled goes back to quest givers it last saw at a lower
+    // level, where new quests may have opened up.
+    bool Revisit();
     // Hunters in the acting arm tame a pet once they know Tame Beast (Cortex.Tame).
     bool Taming();
     // Herbalists and miners in the acting arm walk to nodes they remember (Cortex.Gather); perception remembers
