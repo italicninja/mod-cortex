@@ -1,0 +1,136 @@
+##################################################
+# CORTEX CONFIGURATION FILE                      #
+##################################################
+
+[worldserver]
+
+# Cortex: a player-like AI for random bots, run as an A/B arm next to playerbots' "new rpg" strategy.
+# Design: docs/bot-ai-overhaul.md in the wowproject repo.
+
+# Random bots whose GUID hashes below Ratio are in the Cortex arm (stable across restarts and resets);
+# telemetry samples carry flag 512 (SAMPLE_EXT_ARM) for them.
+# Default: 0 (disabled), 0.5
+Cortex.Enable = 0
+Cortex.Ratio = 0.5
+
+# With Act = 1 the arm drops "new rpg" and "grind" and runs the "cortex" strategy (the quest loop). With 0 the
+# arm keeps new-rpg and only perceives and remembers (an A/A test).
+# Default: 0
+Cortex.Act = 0
+
+# Arm bots perceive (sight within SightRange yd, line of sight past 30 yd) every PerceiveMs and remember what
+# they saw, killed, looted and died to, and quests they gave up on. Memory is saved to the playerbots database
+# (table playerbots_cortex_memory, sql/cortex/ in the wowproject repo) every SaveMinutes and at shutdown.
+# Default: 1, 2000, 100, 5
+Cortex.Perception = 1
+Cortex.PerceiveMs = 2000
+Cortex.SightRange = 100
+Cortex.SaveMinutes = 5
+
+# Hunters in the acting arm that know Tame Beast (the trainer's "Taming the Beast" quests) and have no pet tame a
+# beast they come across: tameable, not elite, their level or up to three below. Telemetry event "tame".
+# Default: 1
+Cortex.Tame = 1
+
+# Herbalists and miners remember the herb and ore nodes they see (memory objects of kind 3); nodes of the kind their
+# Find Herbs / Find Minerals shows (Playerbots.Professions.GatherTracking) count as seen without line of sight, out to
+# the visibility range (at most 100 yd) and SightRange. In the acting arm, with no quest to work (grinding or nothing
+# planned) they walk to the nearest remembered node they can gather within GatherTripRange yd, at most one trip a
+# minute; while questing, to one within 150 yd at most every 10 minutes. Nodes in sight or tracked nearby are taken
+# by playerbots' node detours (Playerbots.Professions.Gather). Telemetry event "gather".
+# Default: 1, 400
+Cortex.Gather = 1
+Cortex.GatherTripRange = 400
+
+# Quest sparkles (chests, sacks, crates, books): perception remembers the ones that sparkle for the bot (memory
+# objects of kind 1). In the acting arm, working a quest area with nothing in sight to use, the bot walks back to the
+# nearest remembered one near the area that would still sparkle for it (its quests still need what it gives), uses it,
+# and tries the next when it finds one gone (5 min before that spot again) or out of reach (30 min). Objects in sight
+# are used out to 60 yd, without a line-of-sight test inside 30 yd. Telemetry event "sparkle": trip, use, found,
+# gone, unreach, slow, moot.
+# Default: 1
+Cortex.Sparkles = 1
+
+# Watchdog: a bot alive, active and on the ground that hasn't moved 10 yd in 10 minutes gets a telemetry row
+# "frozen" every 10 minutes while it lasts (info: the step's last branch | the last action its engine ran; a: minutes;
+# b: distance to its target; c: path type to it, probes round the bot and movement state bits, see Cortex.cpp) and a
+# "frozen_to" row with the target's position. Cheap: five path queries per frozen bot per report.
+# Default: 1
+Cortex.Watchdog = 1
+
+# Escape (needs Act and Watchdog): a bot that has stood still 3 minutes on a navmesh island (its poly reaches fewer
+# than 200 others, the extractor's specks on ledges and in ravines) or with no mesh under it, and whose target isn't on
+# that island, steps to the nearest poly of the mainland: walks straight there if it is below or level, in sight and
+# within 25 yd, else is set down there. Telemetry "escape": walk / set_down (a = island polys, 0 off mesh; b = yd;
+# c = height change) or none (no mainland within 45 yd).
+# Default: 1
+Cortex.Escape = 1
+
+# Corpse run (playerbots 0066): an arm bot comes back from death the way a player does. It runs to its corpse and
+# revives at a spot clear of hostiles, and takes the spirit healer only when the corpse can't be reached in 10 minutes
+# or isn't safe. Off, playerbots' random-bot rules apply: after 5 deaths since the last repair, or 60-300 s dead,
+# the bot is revived at full health and moved to a random grind spot for its level, on any continent.
+# A ghost still stuck after 30 minutes gets that revive (telemetry "corpse_run" rescue, a = seconds).
+# 0 off, 1 the Cortex arm, 2 both arms (the control arm too, for a fair A/B; regroup and hearthing stay Cortex's).
+# Default: 1
+Cortex.CorpseRun = 1
+
+# Regroup (needs Act): for 90 s after a revive, while a hostile that could pull it is in sight within 30 yd, the bot
+# walks up to 50 yd to the spot farthest from the hostiles it sees and from where it died, before sitting down to
+# recover. Telemetry "regroup": move / done / clear / none (a = hostiles in sight, b = nearest yd, c = moves or score).
+# Default: 1
+Cortex.Regroup = 1
+
+# Wand (needs Act): a priest, mage or warlock with a wand, alone, shoots it rather than cast damage spells below 50%
+# mana, or with its mob under 25% health and its mana under 80%; not with two or more on it, under 40% health or
+# against a player. Heals, shields and crowd control still go through. Telemetry "wand": mana / finish (a = mana %,
+# b = target health %, c = level), at most every 10 min per bot.
+# Default: 1
+Cortex.Wand = 1
+
+# TidyBags (needs Act): every 5 minutes out of combat the bot destroys ammo, quest items and trade goods that have
+# no vendor price and that playerbots has no use for (item usage NONE): a priest's arrows, a hunter's worse ammo,
+# items of quests no longer in the log. Telemetry "destroy": info item class, a = entry, b = count.
+# Default: 1
+Cortex.TidyBags = 1
+
+# Talents (needs Act): a holy priest is respecced once to playerbots' premade shadow build (Spirit Tap and Improved
+# Spirit Tap first), the levelling spec; playerbots keeps it at each level-up after that. Telemetry "talents"
+# holy_shadow (a = level, b = main tree after).
+# Default: 1
+Cortex.Talents = 1
+
+# Travel: a place walking can't reach (Rut'theran, Darnassus from Darkshore, Thunder Bluff and Undercity up or down
+# their lifts, another continent) gets a trip of flights, boats and zeppelins, lifts, the Rut'theran portals and
+# Teleport: Moonglade, and so does a walk that got stuck, before the quest is set aside as unreachable. Telemetry
+# events "travel_plan", "travel_leg", "travel_fail".
+#   Travel.Flights: fly when a flight between nodes the bot knows, fare paid, beats walking clearly (800+ yd).
+#   Travel.LearnFlights: talk to a flight master passed within 50 yd whose flight point the bot doesn't know
+#       (event "fp_learned").
+#   Travel.CrossMap: finished quests whose turn-in is on another continent are handed in when nothing is left to do
+#       here.
+#   Travel.Hearth: the hearthstone home (the inn the bot is bound at), then walk, when that beats walking or flying
+#       (counted as 2 minutes for the cast and its 30 minute cooldown); in the bags and off cooldown only.
+# Default: 1, 1, 1, 1, 1
+Cortex.Travel = 1
+Cortex.Travel.Flights = 1
+Cortex.Travel.LearnFlights = 1
+Cortex.Travel.CrossMap = 1
+Cortex.Travel.Hearth = 1
+# Needs from memory (plan.md B2c): selling, repairs, ammo and pet food (Playerbots.NewRpgUpkeep), the class trainer,
+# profession trainers and the inn (Playerbots.NewRpgTrainer) and the auction house (Playerbots.NewRpgAuction) go to
+# the nearest place the bot remembers seeing, walking or by a trip, within VendorRange yd for vendors and TrainerRange
+# yd for trainers. Only when memory has nothing suitable does playerbots' own action take the need (look around and
+# walk to a camp, the trainer and auction catalogs). Playerbots' thresholds apply either way. Tool and reagent
+# errands for professions stay with the trainer trips.
+#   Needs.Food: out of food and drink (under 5, level 5+, not mages), buy some at a food vendor within 500 yd.
+#   Needs.Mail: auction mail waiting, collect it at a mailbox within 250 yd.
+# Telemetry: "need_mem" (served from memory; info "<need>[ trip]", a distance, b entry), "need_fallbk" (left to
+# playerbots; info need), "need_done", "need_fail" (info "<need> <reason>": absent, unreach, trip, noroute, timeout,
+# handover, map).
+# Default: 1, 1500, 3000, 1, 1
+Cortex.Needs = 1
+Cortex.Needs.VendorRange = 1500
+Cortex.Needs.TrainerRange = 3000
+Cortex.Needs.Food = 1
+Cortex.Needs.Mail = 1
