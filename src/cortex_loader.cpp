@@ -8,6 +8,7 @@
 #include "PlayerScript.h"
 #include "WorldSession.h"
 
+void AddCortexBodyScripts();
 void AddCortexScripts();
 
 // The version this source is tagged with in https://github.com/italicninja/mod-cortex (bump it with each tag).
@@ -37,6 +38,7 @@ namespace
 // Called by the core's module loader (Add<module name with '-' as '_'>Scripts).
 void Addmod_cortexScripts()
 {
+    AddCortexBodyScripts();
     AddCortexScripts();
     new CortexLoginScript();
 }
