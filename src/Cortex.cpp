@@ -707,7 +707,7 @@ namespace
 
     std::string SaveSql(uint32 guid, uint8 level, CortexMemory const& memory)
     {
-        return "REPLACE INTO playerbots_cortex_memory (guid, level, updated, data) VALUES (" + std::to_string(guid) +
+        return "REPLACE INTO cortex_memory (guid, level, updated, data) VALUES (" + std::to_string(guid) +
                ", " + std::to_string(level) + ", " + std::to_string(Now()) + ", '" + memory.Serialize() + "')";
     }
 
@@ -754,7 +754,7 @@ namespace
         }
 
         if (QueryResult result =
-                PlayerbotsDatabase.Query("SELECT guid, level, data FROM playerbots_cortex_memory WHERE guid IN (" +
+                PlayerbotsDatabase.Query("SELECT guid, level, data FROM cortex_memory WHERE guid IN (" +
                                          guids + ")"))
         {
             do

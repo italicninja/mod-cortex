@@ -16,7 +16,7 @@ class Player;
 class PlayerbotAI;
 struct ItemTemplate;
 
-// Auction house trips for new rpg random bots (Playerbots.NewRpgAuction).
+// Auction house trips for new rpg random bots (Cortex.Bots.NewRpgAuction).
 //
 // A bot with loot worth listing, auction mail waiting, or money to spend walks to the nearest auctioneer it may use
 // (own faction or neutral, same map, within NewRpgAuctionMaxDistance). On the way it stops at the mailbox next to

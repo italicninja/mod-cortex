@@ -55,7 +55,7 @@ Unit* GrindTargetValue::FindTargetForGrinding(uint32 assistCount)
     Unit* result = nullptr;
     std::unordered_map<uint32, bool> needForQuestMap;
 
-    // Random bots on their own (Playerbots.NewRpgRecover) don't pull packs: in Loch Modan's tunnels bots died to
+    // Random bots on their own (Cortex.Bots.NewRpgRecover) don't pull packs: in Loch Modan's tunnels bots died to
     // ~4 attackers at a time, mostly lower-level kobolds standing together. Skip a target with PACK_SIZE or more other
     // idle hostiles within PACK_RADIUS of it; attackers are still fought (handled above).
     constexpr float PACK_RADIUS = 8.0f;

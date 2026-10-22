@@ -9,7 +9,7 @@
 
 #include "NewRpgBaseAction.h"
 
-// Class trainer trip (Playerbots.NewRpgTrainer): with AutoLearnTrainerSpells off, a random bot that can afford new
+// Class trainer trip (Cortex.Bots.NewRpgTrainer): with AutoLearnTrainerSpells off, a random bot that can afford new
 // spells or ranks walks to the nearest friendly class trainer and learns them (paid, through "trainer").
 class NewRpgTrainerAction : public NewRpgBaseAction
 {

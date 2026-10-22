@@ -29,7 +29,7 @@
 #include "PlayerbotGuildMgr.h"
 #include "PlayerbotSpellRepository.h"
 #include "PlayerbotWorldThreadProcessor.h"
-#include "PlayerbotsExtensions.h"
+#include "CortexChatHook.h"
 #include "RandomPlayerbotMgr.h"
 #include "ScriptMgr.h"
 #include "ServerScript.h"
@@ -44,18 +44,18 @@ public:
 
     bool OnModuleDatabasesLoading() override
     {
-        std::string const dbString = sConfigMgr->GetOption<std::string>("PlayerbotsDatabaseInfo", "");
+        std::string const dbString = sConfigMgr->GetOption<std::string>("CortexDatabaseInfo", "");
         if (dbString.empty())
         {
             LOG_ERROR("server.playerbots", "Playerbots database is not specified in configuration file");
             return false;
         }
 
-        uint8 const workerThreads = sConfigMgr->GetOption<uint8>("PlayerbotsDatabase.WorkerThreads", 1);
-        uint8 const synchThreads = sConfigMgr->GetOption<uint8>("PlayerbotsDatabase.SynchThreads", 2);
+        uint8 const workerThreads = sConfigMgr->GetOption<uint8>("CortexDatabase.WorkerThreads", 1);
+        uint8 const synchThreads = sConfigMgr->GetOption<uint8>("CortexDatabase.SynchThreads", 2);
         PlayerbotsDatabase.SetConnectionInfo(dbString, workerThreads, synchThreads);
 
-        bool const updatesEnabled = sConfigMgr->GetOption<bool>("Playerbots.Updates.EnableDatabases", true);
+        bool const updatesEnabled = sConfigMgr->GetOption<bool>("Cortex.Bots.Updates.EnableDatabases", true);
         if (updatesEnabled && !DBUpdaterUtil::CheckExecutable())
             return false;
 
@@ -78,10 +78,10 @@ public:
         if (updatesEnabled)
         {
             DBUpdaterInfo const info = {
-                "Playerbots",
+                "Cortex bots",
                 BuiltInConfig::GetSourceDirectory() + "/modules/mod-cortex",
-                BuiltInConfig::GetSourceDirectory() + "/modules/mod-cortex/data/sql/playerbots/base/",
-                "db_playerbot"
+                BuiltInConfig::GetSourceDirectory() + "/modules/mod-cortex/data/sql/cortex/base/",
+                "db_cortex"
             };
 
             if (!ModuleDBUpdater::Populate(PlayerbotsDatabase, info))
@@ -116,7 +116,7 @@ public:
     {
         std::string revision;
         if (QueryResult resultPlayerbot =
-                PlayerbotsDatabase.Query("SELECT date FROM version_db_playerbots ORDER BY date DESC LIMIT 1"))
+                PlayerbotsDatabase.Query("SELECT date FROM version_db_cortex ORDER BY date DESC LIMIT 1"))
         {
             Field* fields = resultPlayerbot->Fetch();
             revision = fields[0].Get<std::string>();
@@ -284,8 +284,8 @@ public:
             return true;
         }
 
-        // Chat another module answers (PlayerbotsExtensions): no command, and no refusal either.
-        if (PlayerbotsExtensions::ClaimsChat(receiver, player, type, msg))
+        // Chat another module answers (CortexChatHook, mod-cortex-chat): no command, and no refusal either.
+        if (CortexChatHook::ClaimsChat(receiver, player, type, msg))
             return true;
 
         botAI->HandleCommand(type, msg, player);
@@ -317,7 +317,7 @@ public:
             if (botAI == nullptr)
                 continue;
 
-            if (PlayerbotsExtensions::ClaimsChat(member, player, type, msg))
+            if (CortexChatHook::ClaimsChat(member, player, type, msg))
                 continue;
 
             botAI->HandleCommand(type, msg, player);
@@ -346,7 +346,7 @@ public:
             if (bot->GetGuildId() != player->GetGuildId())
                 continue;
 
-            if (PlayerbotsExtensions::ClaimsChat(bot, player, type, msg))
+            if (CortexChatHook::ClaimsChat(bot, player, type, msg))
                 continue;
 
             PlayerbotsMgr::instance().GetPlayerbotAI(bot)->HandleCommand(type, msg, player);

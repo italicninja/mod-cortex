@@ -133,7 +133,7 @@ bool AttackAnythingAction::isUseful()
     if (bot->IsInCombat())
         return false;
 
-    // New rpg bots don't pull while low or recovering (Playerbots.NewRpgRecover): after a corpse revive at 50%
+    // New rpg bots don't pull while low or recovering (Cortex.Bots.NewRpgRecover): after a corpse revive at 50%
     // health and mana they used to pull the next mob in sight and die again within a minute.
     if (sPlayerbotAIConfig.NewRpgRecover && !bot->GetGroup() && botAI->HasStrategy("new rpg", BOT_STATE_NON_COMBAT))
     {

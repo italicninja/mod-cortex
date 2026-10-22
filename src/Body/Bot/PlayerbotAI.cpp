@@ -5,7 +5,8 @@
  */
 
 #include "PlayerbotAI.h"
-#include "PlayerbotsExtensions.h"
+#include "CortexBody.h"
+#include "CortexChatHook.h"
 #include "AiFactory.h"
 #include "BudgetValues.h"
 #include "ChannelMgr.h"
@@ -262,7 +263,7 @@ void PlayerbotAI::UpdateAI(uint32 elapsed, bool minimal)
         return;
 
     BotTelemetry::instance().Update(this);
-    PlayerbotsExtensions::BotUpdate(this);
+    Cortex::Update(this);
 
     // Bots send no movement opcodes, so m_lastFallZ stays frozen and Player::IsFalling() (a Z test
     // against it) blocks LFG teleports. Unit::IsFalling() is the flag test, so real falls keep theirs.
@@ -1320,8 +1321,8 @@ void PlayerbotAI::HandleBotOutgoingPacket(WorldPacket const& packet)
                     if (isFromFreeBot && isPaused)
                         return;
 
-                    // Another module answers real players in this chat (PlayerbotsExtensions).
-                    if (!isFromFreeBot && PlayerbotsExtensions::SilencesChatReply(bot, msgtype))
+                    // Another module answers real players in this chat (CortexChatHook, mod-cortex-chat).
+                    if (!isFromFreeBot && CortexChatHook::SilencesChatReply(bot, msgtype))
                         return;
 
                     // BG: react only if mentioned or if not channel and real player spoke
@@ -4506,7 +4507,7 @@ Player* PlayerbotAI::FindNewMaster()
 
 // An altbot is a bot whose master is client-based (a regular player or a SelfBot), and is not a randombot, and is not a SelfBot.
 // For the purpose of this bool, all addclassbots return true for IsAltBot, but not all altbots return true for IsAddClassBot, since
-// IsAddClassBot requires the bot to come from a type 2 account in playerbots_account_type.
+// IsAddClassBot requires the bot to come from a type 2 account in cortex_account_type.
 bool PlayerbotAI::IsAltBot() { return HasGameClientMaster() && !sRandomPlayerbotMgr.IsRandomBot(bot) && !IsSelfBot(bot); }
 
 // True when the bot's master is driven by a player with a game client: a regular player (no bot AI) or a SelfBot player.

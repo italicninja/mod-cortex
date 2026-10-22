@@ -14,7 +14,7 @@
 
 class Player;
 
-// Places a bot keeps dying at (Playerbots.NewRpgDangerZones). Bots came back from a corpse run at ~64% health,
+// Places a bot keeps dying at (Cortex.Bots.NewRpgDangerZones). Bots came back from a corpse run at ~64% health,
 // walked ~240 yd back to the same quest, grind spot or camp and died again within two minutes: 44% of all deaths.
 // After DEATHS deaths within RADIUS yards in WINDOW minutes the area is off limits for that bot for the rest of
 // the window: new rpg drops destinations in it and grind / camp selection skips it.

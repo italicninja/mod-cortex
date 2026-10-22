@@ -26,7 +26,7 @@
 #include "PlayerbotAIConfig.h"
 #include "PlayerbotsDatabase.h"
 #include "Playerbots.h"
-#include "PlayerbotsExtensions.h"
+#include "CortexBody.h"
 #include "RandomPlayerbotMgr.h"
 #include "Timer.h"
 #include "WorldSession.h"
@@ -198,7 +198,7 @@ void BotTelemetry::Event(PlayerbotAI* botAI, std::string_view event, std::string
     row.ts = NowUnixMs();
     row.guid = bot->GetGUID().GetCounter();
     row.event = std::string(event);
-    if (!PlayerbotsExtensions::TelemetryState(bot, row.state))
+    if (!Cortex::TelemetryState(bot, row.state))
         row.state = StatusName(botAI->rpgInfo.GetStatus());
     row.info = Sanitize(info);
     row.a = a;
@@ -388,7 +388,7 @@ void BotTelemetry::Update(PlayerbotAI* botAI)
         flags |= SAMPLE_RANDOM_BOT;
     if (bot->IsInFlight())
         flags |= SAMPLE_IN_FLIGHT;
-    if (PlayerbotsExtensions::TelemetryArm(bot))
+    if (Cortex::InArm(bot))
         flags |= SAMPLE_EXT_ARM;
 
     uint32 hpPct = static_cast<uint32>(bot->GetHealthPct());
@@ -416,7 +416,7 @@ namespace
 
 void BotTelemetry::LoadConfig()
 {
-    sPlayerTraceMs = sConfigMgr->GetOption<uint32>("Playerbots.Telemetry.PlayerTraceMs", 0);
+    sPlayerTraceMs = sConfigMgr->GetOption<uint32>("Cortex.Bots.Telemetry.PlayerTraceMs", 0);
     if (sPlayerTraceMs)
         sPlayerTraceMs = std::max<uint32>(250, sPlayerTraceMs);
 }
@@ -511,7 +511,7 @@ void BotTelemetry::Push(Row&& row)
         uint64 retentionMs = static_cast<uint64>(sPlayerbotAIConfig.TelemetryRetentionHours) * HOUR * IN_MILLISECONDS;
         uint64 cutoff = NowUnixMs() - retentionMs;
         PlayerbotsDatabase.Execute(
-            fmt::format("DELETE FROM playerbots_telemetry WHERE ts < {} AND event <> 'ptrace'", cutoff));
+            fmt::format("DELETE FROM cortex_telemetry WHERE ts < {} AND event <> 'ptrace'", cutoff));
     }
 }
 
@@ -522,7 +522,7 @@ void BotTelemetry::Write(std::vector<Row> const& rows)
 
     std::string sql;
     sql.reserve(rows.size() * 120);
-    sql += "INSERT INTO playerbots_telemetry (ts, guid, event, state, info, a, b, c, map, zone, x, y, z, level) ";
+    sql += "INSERT INTO cortex_telemetry (ts, guid, event, state, info, a, b, c, map, zone, x, y, z, level) ";
     sql += "VALUES ";
     bool first = true;
     for (Row const& row : rows)

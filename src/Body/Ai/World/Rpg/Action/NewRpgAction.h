@@ -71,7 +71,7 @@ protected:
 };
 
 // Out of combat and hurt: eat/drink if possible, otherwise sit until health and mana are back
-// (Playerbots.NewRpgRecover). Runs above the status update, so the bot doesn't walk off half dead.
+// (Cortex.Bots.NewRpgRecover). Runs above the status update, so the bot doesn't walk off half dead.
 class NewRpgRecoverAction : public NewRpgBaseAction
 {
 public:
@@ -97,7 +97,7 @@ public:
 };
 
 // Bags nearly full of junk, gear worn down or a hunter low on ammo: walk to a vendor (or a camp in the same zone
-// to find one), then equip upgrades, sell junk, repair and buy useful items (Playerbots.NewRpgUpkeep).
+// to find one), then equip upgrades, sell junk, repair and buy useful items (Cortex.Bots.NewRpgUpkeep).
 class NewRpgUpkeepAction : public NewRpgBaseAction
 {
 public:

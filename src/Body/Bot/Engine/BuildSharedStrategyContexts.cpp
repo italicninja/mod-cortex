@@ -5,7 +5,7 @@
  */
 
 #include "AiObjectContext.h"
-#include "PlayerbotsExtensions.h"
+#include "CortexBody.h"
 #include "RaidStrategyContext.h"
 #include "StrategyContext.h"
 
@@ -17,6 +17,6 @@ void AiObjectContext::BuildSharedStrategyContexts(SharedNamedObjectContextList<S
     strategyContexts.Add(new QuestStrategyContext());
     strategyContexts.Add(new RaidStrategyContext());
 
-    // Other modules' contexts (PlayerbotsExtensions), after the built-in ones.
-    PlayerbotsExtensions::BuildStrategyContexts(strategyContexts);
+    // The brain's strategies, after the body's own.
+    Cortex::BuildStrategyContexts(strategyContexts);
 }

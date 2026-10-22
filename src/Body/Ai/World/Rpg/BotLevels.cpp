@@ -28,7 +28,7 @@ bool InBox(float x, float y, float minX, float maxX, float minY, float maxY)
 
 bool Enabled()
 {
-    static bool const enabled = sConfigMgr->GetOption<bool>("Playerbots.NewRpgLevels", true);
+    static bool const enabled = sConfigMgr->GetOption<bool>("Cortex.Bots.NewRpgLevels", true);
     return enabled;
 }
 

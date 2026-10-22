@@ -16,7 +16,7 @@ class GameObject;
 class Player;
 struct GameObjectTemplate;
 
-// Node detours (Playerbots.Professions.Gather, docs/professions.md): a random bot with herbalism or mining that sees a
+// Node detours (Cortex.Bots.Professions.Gather, docs/professions.md): a random bot with herbalism or mining that sees a
 // node it can gather (skill high enough for the lock, a pick for ore) within GatherRange yards, reachable and with no
 // hostile next to it, walks over, gathers and loots it, as a player leaves the road for a herb. At most one detour per
 // GatherCooldown seconds (a node right next to the bot is no detour), and never to a node another bot is heading for.

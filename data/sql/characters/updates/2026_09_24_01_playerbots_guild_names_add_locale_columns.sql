@@ -1,4 +1,4 @@
-ALTER TABLE playerbots_guild_names
+ALTER TABLE cortex_guild_names
     ADD COLUMN name_koKR VARCHAR(24) NULL AFTER name,
 	ADD COLUMN name_frFR VARCHAR(24) NULL AFTER name_koKR,
     ADD COLUMN name_deDE VARCHAR(24) NULL AFTER name_frFR,

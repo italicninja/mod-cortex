@@ -6,7 +6,7 @@
 
 #include "ActionContext.h"
 #include "AiObjectContext.h"
-#include "PlayerbotsExtensions.h"
+#include "CortexBody.h"
 #include "Aq20ActionContext.h"
 #include "BWLActionContext.h"
 #include "ChatActionContext.h"
@@ -25,6 +25,6 @@ void AiObjectContext::BuildSharedActionContexts(
     actionContexts.Add(new RaidBwlActionContext());
     actionContexts.Add(new RaidOnyxiaActionContext());
 
-    // Other modules' contexts (PlayerbotsExtensions), after the built-in ones.
-    PlayerbotsExtensions::BuildActionContexts(actionContexts);
+    // The brain's actions, after the body's own.
+    Cortex::BuildActionContexts(actionContexts);
 }

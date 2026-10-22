@@ -150,7 +150,7 @@ void PlayerbotTextMgr::LoadPersonas()
     personaWeightTotal = 0;
     botPersonas.clear();
 
-    if (QueryResult result = PlayerbotsDatabase.Query("SELECT persona, weight FROM ai_playerbot_personas"))
+    if (QueryResult result = PlayerbotsDatabase.Query("SELECT persona, weight FROM cortex_personas"))
     {
         do
         {
@@ -168,7 +168,7 @@ void PlayerbotTextMgr::LoadPersonas()
         } while (result->NextRow());
     }
 
-    if (QueryResult result = PlayerbotsDatabase.Query("SELECT guid, persona FROM playerbots_persona"))
+    if (QueryResult result = PlayerbotsDatabase.Query("SELECT guid, persona FROM cortex_persona"))
     {
         do
         {
@@ -190,7 +190,7 @@ std::string PlayerbotTextMgr::GetPersona(Player* bot)
     if (!personaWeightTotal)
         return "";
 
-    // Keep the stored persona unless it was removed from ai_playerbot_personas
+    // Keep the stored persona unless it was removed from cortex_personas
     auto it = botPersonas.find(guid);
     if (it != botPersonas.end())
     {
@@ -214,7 +214,7 @@ std::string PlayerbotTextMgr::GetPersona(Player* bot)
     }
 
     botPersonas[guid] = chosen;
-    PlayerbotsDatabase.Execute("REPLACE INTO playerbots_persona (guid, persona) VALUES ({}, '{}')", guid, chosen);
+    PlayerbotsDatabase.Execute("REPLACE INTO cortex_persona (guid, persona) VALUES ({}, '{}')", guid, chosen);
     return chosen;
 }
 

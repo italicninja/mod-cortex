@@ -11,7 +11,7 @@
 
 class Player;
 
-// Parts of a continent walking doesn't join (Playerbots.NewRpgLevels): Thunder Bluff's mesas and Undercity are
+// Parts of a continent walking doesn't join (Cortex.Bots.NewRpgLevels): Thunder Bluff's mesas and Undercity are
 // reached by lift, the top of Teldrassil and Rut'theran Village at its foot by the portals. New rpg walked to the
 // spot under the place (the foot of Hunter's Rise under the hunter trainer, the edge of the tree over Rut'theran) and
 // hearthed out after a detour. Now a place across a portal is walked to by the portal, and a place up a lift is given

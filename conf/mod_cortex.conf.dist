@@ -20,7 +20,7 @@ Cortex.Act = 0
 
 # Arm bots perceive (sight within SightRange yd, line of sight past 30 yd) every PerceiveMs and remember what
 # they saw, killed, looted and died to, and quests they gave up on. Memory is saved to the playerbots database
-# (table playerbots_cortex_memory, sql/cortex/ in the wowproject repo) every SaveMinutes and at shutdown.
+# (table cortex_memory, sql/cortex/ in the wowproject repo) every SaveMinutes and at shutdown.
 # Default: 1, 2000, 100, 5
 Cortex.Perception = 1
 Cortex.PerceiveMs = 2000
@@ -33,11 +33,11 @@ Cortex.SaveMinutes = 5
 Cortex.Tame = 1
 
 # Herbalists and miners remember the herb and ore nodes they see (memory objects of kind 3); nodes of the kind their
-# Find Herbs / Find Minerals shows (Playerbots.Professions.GatherTracking) count as seen without line of sight, out to
+# Find Herbs / Find Minerals shows (Cortex.Bots.Professions.GatherTracking) count as seen without line of sight, out to
 # the visibility range (at most 100 yd) and SightRange. In the acting arm, with no quest to work (grinding or nothing
 # planned) they walk to the nearest remembered node they can gather within GatherTripRange yd, at most one trip a
 # minute; while questing, to one within 150 yd at most every 10 minutes. Nodes in sight or tracked nearby are taken
-# by playerbots' node detours (Playerbots.Professions.Gather). Telemetry event "gather".
+# by playerbots' node detours (Cortex.Bots.Professions.Gather). Telemetry event "gather".
 # Default: 1, 400
 Cortex.Gather = 1
 Cortex.GatherTripRange = 400
@@ -138,8 +138,8 @@ Cortex.Travel.HighZones = 1
 # reached that way sets the quest area aside for 2 h. Off, a walk is looked at once, when the target is chosen.
 # Default: 1
 Cortex.Travel.Recheck = 1
-# Needs from memory (plan.md B2c): selling, repairs, ammo and pet food (Playerbots.NewRpgUpkeep), the class trainer,
-# profession trainers and the inn (Playerbots.NewRpgTrainer) and the auction house (Playerbots.NewRpgAuction) go to
+# Needs from memory (plan.md B2c): selling, repairs, ammo and pet food (Cortex.Bots.NewRpgUpkeep), the class trainer,
+# profession trainers and the inn (Cortex.Bots.NewRpgTrainer) and the auction house (Cortex.Bots.NewRpgAuction) go to
 # the nearest place the bot remembers seeing, walking or by a trip, within VendorRange yd for vendors and TrainerRange
 # yd for trainers. Only when memory has nothing suitable does playerbots' own action take the need (look around and
 # walk to a camp, the trainer and auction catalogs). Playerbots' thresholds apply either way. Tool and reagent

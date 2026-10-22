@@ -72,20 +72,20 @@ time_t Now() { return GameTime::GetGameTime().count(); }
 
 void LoadSettings()
 {
-    settings.enabled = sConfigMgr->GetOption<bool>("Playerbots.NewRpgAuction", false);
-    settings.minLevel = sConfigMgr->GetOption<uint32>("Playerbots.NewRpgAuctionMinLevel", 8);
-    settings.tripMinutes = sConfigMgr->GetOption<uint32>("Playerbots.NewRpgAuctionTripMinutes", 60);
-    settings.maxDistance = sConfigMgr->GetOption<float>("Playerbots.NewRpgAuctionMaxDistance", 4000.0f);
-    settings.maxListings = sConfigMgr->GetOption<uint32>("Playerbots.NewRpgAuctionMaxListings", 8);
-    settings.maxActive = sConfigMgr->GetOption<uint32>("Playerbots.NewRpgAuctionMaxActive", 16);
-    settings.pricePct = sConfigMgr->GetOption<uint32>("Playerbots.NewRpgAuctionPricePct", 100);
-    settings.spendPct = std::min<uint32>(100, sConfigMgr->GetOption<uint32>("Playerbots.NewRpgAuctionSpendPct", 50));
-    settings.maxBuys = sConfigMgr->GetOption<uint32>("Playerbots.NewRpgAuctionMaxBuys", 2);
+    settings.enabled = sConfigMgr->GetOption<bool>("Cortex.Bots.NewRpgAuction", false);
+    settings.minLevel = sConfigMgr->GetOption<uint32>("Cortex.Bots.NewRpgAuctionMinLevel", 8);
+    settings.tripMinutes = sConfigMgr->GetOption<uint32>("Cortex.Bots.NewRpgAuctionTripMinutes", 60);
+    settings.maxDistance = sConfigMgr->GetOption<float>("Cortex.Bots.NewRpgAuctionMaxDistance", 4000.0f);
+    settings.maxListings = sConfigMgr->GetOption<uint32>("Cortex.Bots.NewRpgAuctionMaxListings", 8);
+    settings.maxActive = sConfigMgr->GetOption<uint32>("Cortex.Bots.NewRpgAuctionMaxActive", 16);
+    settings.pricePct = sConfigMgr->GetOption<uint32>("Cortex.Bots.NewRpgAuctionPricePct", 100);
+    settings.spendPct = std::min<uint32>(100, sConfigMgr->GetOption<uint32>("Cortex.Bots.NewRpgAuctionSpendPct", 50));
+    settings.maxBuys = sConfigMgr->GetOption<uint32>("Cortex.Bots.NewRpgAuctionMaxBuys", 2);
     settings.firstWandPct =
-        std::min<uint32>(100, sConfigMgr->GetOption<uint32>("Playerbots.NewRpgAuctionFirstWandPct", 0));
+        std::min<uint32>(100, sConfigMgr->GetOption<uint32>("Cortex.Bots.NewRpgAuctionFirstWandPct", 0));
 
     settings.skipZones.clear();
-    std::string zones = sConfigMgr->GetOption<std::string>("Playerbots.NewRpgAuctionSkipZones", "1497,1638");
+    std::string zones = sConfigMgr->GetOption<std::string>("Cortex.Bots.NewRpgAuctionSkipZones", "1497,1638");
     for (std::string_view token : Acore::Tokenize(zones, ',', false))
     {
         if (Optional<uint32> zone = Acore::StringTo<uint32>(token))

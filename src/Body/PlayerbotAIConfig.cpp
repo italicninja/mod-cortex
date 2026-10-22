@@ -64,7 +64,7 @@ void LoadListString(std::string const value, T& list)
 }
 
 // Parses a comma-separated, whitespace-tolerant bot name list (as used by both
-// Playerbots.LevelBrackets.ExcludeNames and Playerbots.ResetBotLevel.ExcludeNames) into out.
+// Cortex.Bots.LevelBrackets.ExcludeNames and Cortex.Bots.ResetBotLevel.ExcludeNames) into out.
 static void ParseLevelMgrExcludeNames(std::string const& csv, std::vector<std::string>& out)
 {
     out.clear();
@@ -82,59 +82,59 @@ bool PlayerbotAIConfig::Initialize()
 {
     LOG_INFO("server.loading", "Initializing mod-playerbots, based on AI Playerbots by ike3 and the original Playerbots by blueboy");
 
-    Enabled = sConfigMgr->GetOption<bool>("Playerbots.Enabled", true);
+    Enabled = sConfigMgr->GetOption<bool>("Cortex.Bots.Enabled", true);
     if (!Enabled)
     {
         LOG_INFO("server.loading", "Playerbots Module is disabled in playerbots.conf");
         return false;
     }
 
-    GlobalCoolDown = sConfigMgr->GetOption<int32>("Playerbots.GlobalCooldown", 500);
-    MaxWaitForMove = sConfigMgr->GetOption<int32>("Playerbots.MaxWaitForMove", 5000);
-    DisableMoveSplinePath = sConfigMgr->GetOption<int32>("Playerbots.DisableMoveSplinePath", 0);
-    MaxMovementSearchTime = sConfigMgr->GetOption<int32>("Playerbots.MaxMovementSearchTime", 3);
-    ExpireActionTime = sConfigMgr->GetOption<int32>("Playerbots.ExpireActionTime", 5000);
-    DispelAuraDuration = sConfigMgr->GetOption<int32>("Playerbots.DispelAuraDuration", 700);
-    ReactDelay = sConfigMgr->GetOption<int32>("Playerbots.ReactDelay", 100);
-    DynamicReactDelay = sConfigMgr->GetOption<bool>("Playerbots.DynamicReactDelay", true);
-    PassiveDelay = sConfigMgr->GetOption<int32>("Playerbots.PassiveDelay", 10000);
-    RepeatDelay = sConfigMgr->GetOption<int32>("Playerbots.RepeatDelay", 2000);
-    ErrorDelay = sConfigMgr->GetOption<int32>("Playerbots.ErrorDelay", 100);
-    RpgDelay = sConfigMgr->GetOption<int32>("Playerbots.RpgDelay", 10000);
-    SitDelay = sConfigMgr->GetOption<int32>("Playerbots.SitDelay", 20000);
-    ReturnDelay = sConfigMgr->GetOption<int32>("Playerbots.ReturnDelay", 2000);
-    LootDelay = sConfigMgr->GetOption<int32>("Playerbots.LootDelay", 1000);
-    DisabledWithoutRealPlayerLoginDelay = sConfigMgr->GetOption<int32>("Playerbots.DisabledWithoutRealPlayerLoginDelay", 30);
-    DisabledWithoutRealPlayerLogoutDelay = sConfigMgr->GetOption<int32>("Playerbots.DisabledWithoutRealPlayerLogoutDelay", 300);
+    GlobalCoolDown = sConfigMgr->GetOption<int32>("Cortex.Bots.GlobalCooldown", 500);
+    MaxWaitForMove = sConfigMgr->GetOption<int32>("Cortex.Bots.MaxWaitForMove", 5000);
+    DisableMoveSplinePath = sConfigMgr->GetOption<int32>("Cortex.Bots.DisableMoveSplinePath", 0);
+    MaxMovementSearchTime = sConfigMgr->GetOption<int32>("Cortex.Bots.MaxMovementSearchTime", 3);
+    ExpireActionTime = sConfigMgr->GetOption<int32>("Cortex.Bots.ExpireActionTime", 5000);
+    DispelAuraDuration = sConfigMgr->GetOption<int32>("Cortex.Bots.DispelAuraDuration", 700);
+    ReactDelay = sConfigMgr->GetOption<int32>("Cortex.Bots.ReactDelay", 100);
+    DynamicReactDelay = sConfigMgr->GetOption<bool>("Cortex.Bots.DynamicReactDelay", true);
+    PassiveDelay = sConfigMgr->GetOption<int32>("Cortex.Bots.PassiveDelay", 10000);
+    RepeatDelay = sConfigMgr->GetOption<int32>("Cortex.Bots.RepeatDelay", 2000);
+    ErrorDelay = sConfigMgr->GetOption<int32>("Cortex.Bots.ErrorDelay", 100);
+    RpgDelay = sConfigMgr->GetOption<int32>("Cortex.Bots.RpgDelay", 10000);
+    SitDelay = sConfigMgr->GetOption<int32>("Cortex.Bots.SitDelay", 20000);
+    ReturnDelay = sConfigMgr->GetOption<int32>("Cortex.Bots.ReturnDelay", 2000);
+    LootDelay = sConfigMgr->GetOption<int32>("Cortex.Bots.LootDelay", 1000);
+    DisabledWithoutRealPlayerLoginDelay = sConfigMgr->GetOption<int32>("Cortex.Bots.DisabledWithoutRealPlayerLoginDelay", 30);
+    DisabledWithoutRealPlayerLogoutDelay = sConfigMgr->GetOption<int32>("Cortex.Bots.DisabledWithoutRealPlayerLogoutDelay", 300);
 
-    FarDistance = sConfigMgr->GetOption<float>("Playerbots.FarDistance", 20.0f);
-    SightDistance = sConfigMgr->GetOption<float>("Playerbots.SightDistance", 100.0f);
-    SpellDistance = sConfigMgr->GetOption<float>("Playerbots.SpellDistance", 28.5f);
-    ShootDistance = sConfigMgr->GetOption<float>("Playerbots.ShootDistance", 5.0f);
-    HealDistance = sConfigMgr->GetOption<float>("Playerbots.HealDistance", 38.5f);
-    LootDistance = sConfigMgr->GetOption<float>("Playerbots.LootDistance", 15.0f);
-    FleeDistance = sConfigMgr->GetOption<float>("Playerbots.FleeDistance", 5.0f);
-    AggroDistance = sConfigMgr->GetOption<float>("Playerbots.AggroDistance", 22.0f);
-    TooCloseDistance = sConfigMgr->GetOption<float>("Playerbots.TooCloseDistance", 5.0f);
-    MeleeDistance = sConfigMgr->GetOption<float>("Playerbots.MeleeDistance", 0.75f);
-    FollowDistance = sConfigMgr->GetOption<float>("Playerbots.FollowDistance", 1.5f);
-    WhisperDistance = sConfigMgr->GetOption<float>("Playerbots.WhisperDistance", 6000.0f);
-    ContactDistance = sConfigMgr->GetOption<float>("Playerbots.ContactDistance", 0.45f);
-    AoeRadius = sConfigMgr->GetOption<float>("Playerbots.AoeRadius", 10.0f);
-    RpgDistance = sConfigMgr->GetOption<float>("Playerbots.RpgDistance", 200.0f);
-    GrindDistance = sConfigMgr->GetOption<float>("Playerbots.GrindDistance", 75.0f);
-    ReactDistance = sConfigMgr->GetOption<float>("Playerbots.ReactDistance", 150.0f);
+    FarDistance = sConfigMgr->GetOption<float>("Cortex.Bots.FarDistance", 20.0f);
+    SightDistance = sConfigMgr->GetOption<float>("Cortex.Bots.SightDistance", 100.0f);
+    SpellDistance = sConfigMgr->GetOption<float>("Cortex.Bots.SpellDistance", 28.5f);
+    ShootDistance = sConfigMgr->GetOption<float>("Cortex.Bots.ShootDistance", 5.0f);
+    HealDistance = sConfigMgr->GetOption<float>("Cortex.Bots.HealDistance", 38.5f);
+    LootDistance = sConfigMgr->GetOption<float>("Cortex.Bots.LootDistance", 15.0f);
+    FleeDistance = sConfigMgr->GetOption<float>("Cortex.Bots.FleeDistance", 5.0f);
+    AggroDistance = sConfigMgr->GetOption<float>("Cortex.Bots.AggroDistance", 22.0f);
+    TooCloseDistance = sConfigMgr->GetOption<float>("Cortex.Bots.TooCloseDistance", 5.0f);
+    MeleeDistance = sConfigMgr->GetOption<float>("Cortex.Bots.MeleeDistance", 0.75f);
+    FollowDistance = sConfigMgr->GetOption<float>("Cortex.Bots.FollowDistance", 1.5f);
+    WhisperDistance = sConfigMgr->GetOption<float>("Cortex.Bots.WhisperDistance", 6000.0f);
+    ContactDistance = sConfigMgr->GetOption<float>("Cortex.Bots.ContactDistance", 0.45f);
+    AoeRadius = sConfigMgr->GetOption<float>("Cortex.Bots.AoeRadius", 10.0f);
+    RpgDistance = sConfigMgr->GetOption<float>("Cortex.Bots.RpgDistance", 200.0f);
+    GrindDistance = sConfigMgr->GetOption<float>("Cortex.Bots.GrindDistance", 75.0f);
+    ReactDistance = sConfigMgr->GetOption<float>("Cortex.Bots.ReactDistance", 150.0f);
 
-    CriticalHealth = sConfigMgr->GetOption<int32>("Playerbots.CriticalHealth", 25);
-    LowHealth = sConfigMgr->GetOption<int32>("Playerbots.LowHealth", 45);
-    MediumHealth = sConfigMgr->GetOption<int32>("Playerbots.MediumHealth", 65);
-    AlmostFullHealth = sConfigMgr->GetOption<int32>("Playerbots.AlmostFullHealth", 85);
-    LowMana = sConfigMgr->GetOption<int32>("Playerbots.LowMana", 15);
-    MediumMana = sConfigMgr->GetOption<int32>("Playerbots.MediumMana", 40);
-    HighMana = sConfigMgr->GetOption<int32>("Playerbots.HighMana", 65);
-    AutoSaveMana = sConfigMgr->GetOption<bool>("Playerbots.AutoSaveMana", true);
-    SaveManaThreshold = sConfigMgr->GetOption<int32>("Playerbots.SaveManaThreshold", 60);
-    switch (sConfigMgr->GetOption<uint32>("Playerbots.AutoGreaterBlessings", 1))
+    CriticalHealth = sConfigMgr->GetOption<int32>("Cortex.Bots.CriticalHealth", 25);
+    LowHealth = sConfigMgr->GetOption<int32>("Cortex.Bots.LowHealth", 45);
+    MediumHealth = sConfigMgr->GetOption<int32>("Cortex.Bots.MediumHealth", 65);
+    AlmostFullHealth = sConfigMgr->GetOption<int32>("Cortex.Bots.AlmostFullHealth", 85);
+    LowMana = sConfigMgr->GetOption<int32>("Cortex.Bots.LowMana", 15);
+    MediumMana = sConfigMgr->GetOption<int32>("Cortex.Bots.MediumMana", 40);
+    HighMana = sConfigMgr->GetOption<int32>("Cortex.Bots.HighMana", 65);
+    AutoSaveMana = sConfigMgr->GetOption<bool>("Cortex.Bots.AutoSaveMana", true);
+    SaveManaThreshold = sConfigMgr->GetOption<int32>("Cortex.Bots.SaveManaThreshold", 60);
+    switch (sConfigMgr->GetOption<uint32>("Cortex.Bots.AutoGreaterBlessings", 1))
     {
         case 0:
             AutoGreaterBlessings = AutoPartyBuffMode::DISABLED;
@@ -147,7 +147,7 @@ bool PlayerbotAIConfig::Initialize()
             AutoGreaterBlessings = AutoPartyBuffMode::RAID_ONLY;
             break;
     }
-    switch (sConfigMgr->GetOption<uint32>("Playerbots.AutoPartyBuffs", 2))
+    switch (sConfigMgr->GetOption<uint32>("Cortex.Bots.AutoPartyBuffs", 2))
     {
         case 0:
             AutoPartyBuffs = AutoPartyBuffMode::DISABLED;
@@ -160,125 +160,125 @@ bool PlayerbotAIConfig::Initialize()
             AutoPartyBuffs = AutoPartyBuffMode::GROUP_OR_RAID;
             break;
     }
-    TellWhenMissingBuffReagents = sConfigMgr->GetOption<bool>("Playerbots.TellWhenMissingBuffReagents", true);
+    TellWhenMissingBuffReagents = sConfigMgr->GetOption<bool>("Cortex.Bots.TellWhenMissingBuffReagents", true);
     MissingBuffReagentMessageCooldown = sConfigMgr->GetOption<uint32>(
-        "Playerbots.MissingBuffReagentMessageCooldown", 300);
-    ForceRebuffOnReadyCheck = sConfigMgr->GetOption<bool>("Playerbots.ForceRebuffOnReadyCheck", false);
-    ForceRebuffMarginSecs = std::min(sConfigMgr->GetOption<uint32>("Playerbots.ForceRebuffMarginSecs", 60), 3600u);
-    AutoAvoidAoe = sConfigMgr->GetOption<bool>("Playerbots.AutoAvoidAoe", true);
-    MaxAoeAvoidRadius = sConfigMgr->GetOption<float>("Playerbots.MaxAoeAvoidRadius", 15.0f);
-    LoadSet<std::set<uint32>>(sConfigMgr->GetOption<std::string>("Playerbots.AoeAvoidSpellWhitelist", "50759,57491,13810,29946"),
+        "Cortex.Bots.MissingBuffReagentMessageCooldown", 300);
+    ForceRebuffOnReadyCheck = sConfigMgr->GetOption<bool>("Cortex.Bots.ForceRebuffOnReadyCheck", false);
+    ForceRebuffMarginSecs = std::min(sConfigMgr->GetOption<uint32>("Cortex.Bots.ForceRebuffMarginSecs", 60), 3600u);
+    AutoAvoidAoe = sConfigMgr->GetOption<bool>("Cortex.Bots.AutoAvoidAoe", true);
+    MaxAoeAvoidRadius = sConfigMgr->GetOption<float>("Cortex.Bots.MaxAoeAvoidRadius", 15.0f);
+    LoadSet<std::set<uint32>>(sConfigMgr->GetOption<std::string>("Cortex.Bots.AoeAvoidSpellWhitelist", "50759,57491,13810,29946"),
                               AoeAvoidSpellWhitelist);
-    TellWhenAvoidAoe = sConfigMgr->GetOption<bool>("Playerbots.TellWhenAvoidAoe", false);
+    TellWhenAvoidAoe = sConfigMgr->GetOption<bool>("Cortex.Bots.TellWhenAvoidAoe", false);
 
-    RandomGearLoweringChance = sConfigMgr->GetOption<float>("Playerbots.RandomGearLoweringChance", 0.0f);
-    RandomGearQualityLimit = sConfigMgr->GetOption<int32>("Playerbots.RandomGearQualityLimit", 3);
-    RandomGearScoreLimit = sConfigMgr->GetOption<int32>("Playerbots.RandomGearScoreLimit", 0);
-    PreferClassArmorType  = sConfigMgr->GetOption<bool>("Playerbots.PreferClassArmorType", false);
-    PreferredSpecWeapons  = sConfigMgr->GetOption<bool>("Playerbots.PreferredSpecWeapons", false);
+    RandomGearLoweringChance = sConfigMgr->GetOption<float>("Cortex.Bots.RandomGearLoweringChance", 0.0f);
+    RandomGearQualityLimit = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomGearQualityLimit", 3);
+    RandomGearScoreLimit = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomGearScoreLimit", 0);
+    PreferClassArmorType  = sConfigMgr->GetOption<bool>("Cortex.Bots.PreferClassArmorType", false);
+    PreferredSpecWeapons  = sConfigMgr->GetOption<bool>("Cortex.Bots.PreferredSpecWeapons", false);
 
-    RandomBotMinLevelChance = sConfigMgr->GetOption<float>("Playerbots.RandomBotMinLevelChance", 0.1f);
-    RandomBotMaxLevelChance = sConfigMgr->GetOption<float>("Playerbots.RandomBotMaxLevelChance", 0.1f);
-    RandomBotRpgChance = sConfigMgr->GetOption<float>("Playerbots.RandomBotRpgChance", 0.20f);
+    RandomBotMinLevelChance = sConfigMgr->GetOption<float>("Cortex.Bots.RandomBotMinLevelChance", 0.1f);
+    RandomBotMaxLevelChance = sConfigMgr->GetOption<float>("Cortex.Bots.RandomBotMaxLevelChance", 0.1f);
+    RandomBotRpgChance = sConfigMgr->GetOption<float>("Cortex.Bots.RandomBotRpgChance", 0.20f);
 
-    IterationsPerTick = sConfigMgr->GetOption<int32>("Playerbots.IterationsPerTick", 10);
+    IterationsPerTick = sConfigMgr->GetOption<int32>("Cortex.Bots.IterationsPerTick", 10);
 
-    AllowAccountBots = sConfigMgr->GetOption<bool>("Playerbots.AllowAccountBots", true);
-    AllowGuildBots = sConfigMgr->GetOption<bool>("Playerbots.AllowGuildBots", true);
-    AllowTrustedAccountBots = sConfigMgr->GetOption<bool>("Playerbots.AllowTrustedAccountBots", true);
-    DisabledWithoutRealPlayer = sConfigMgr->GetOption<bool>("Playerbots.DisabledWithoutRealPlayer", false);
-    RandomBotGuildNearby = sConfigMgr->GetOption<bool>("Playerbots.RandomBotGuildNearby", false);
-    RandomBotInvitePlayer = sConfigMgr->GetOption<bool>("Playerbots.RandomBotInvitePlayer", false);
-    InviteChat = sConfigMgr->GetOption<bool>("Playerbots.InviteChat", false);
+    AllowAccountBots = sConfigMgr->GetOption<bool>("Cortex.Bots.AllowAccountBots", true);
+    AllowGuildBots = sConfigMgr->GetOption<bool>("Cortex.Bots.AllowGuildBots", true);
+    AllowTrustedAccountBots = sConfigMgr->GetOption<bool>("Cortex.Bots.AllowTrustedAccountBots", true);
+    DisabledWithoutRealPlayer = sConfigMgr->GetOption<bool>("Cortex.Bots.DisabledWithoutRealPlayer", false);
+    RandomBotGuildNearby = sConfigMgr->GetOption<bool>("Cortex.Bots.RandomBotGuildNearby", false);
+    RandomBotInvitePlayer = sConfigMgr->GetOption<bool>("Cortex.Bots.RandomBotInvitePlayer", false);
+    InviteChat = sConfigMgr->GetOption<bool>("Cortex.Bots.InviteChat", false);
 
-    RandomBotMapsAsString = sConfigMgr->GetOption<std::string>("Playerbots.RandomBotMaps", "0,1,530,571");
+    RandomBotMapsAsString = sConfigMgr->GetOption<std::string>("Cortex.Bots.RandomBotMaps", "0,1,530,571");
     LoadList<std::vector<uint32>>(RandomBotMapsAsString, RandomBotMaps);
-    ProbTeleToBankers = sConfigMgr->GetOption<float>("Playerbots.ProbTeleToBankers", 0.25f);
-    EnableWeightTeleToCityBankers = sConfigMgr->GetOption<bool>("Playerbots.EnableWeightTeleToCityBankers", false);
-    WeightTeleToStormwind = sConfigMgr->GetOption<int>("Playerbots.TeleToStormwindWeight", 2);
-    WeightTeleToIronforge = sConfigMgr->GetOption<int>("Playerbots.TeleToIronforgeWeight", 1);
-    WeightTeleToDarnassus = sConfigMgr->GetOption<int>("Playerbots.TeleToDarnassusWeight", 1);
-    WeightTeleToExodar = sConfigMgr->GetOption<int>("Playerbots.TeleToExodarWeight", 1);
-    WeightTeleToOrgrimmar = sConfigMgr->GetOption<int>("Playerbots.TeleToOrgrimmarWeight", 2);
-    WeightTeleToUndercity = sConfigMgr->GetOption<int>("Playerbots.TeleToUndercityWeight", 1);
-    WeightTeleToThunderBluff = sConfigMgr->GetOption<int>("Playerbots.TeleToThunderBluffWeight", 1);
-    WeightTeleToSilvermoonCity = sConfigMgr->GetOption<int>("Playerbots.TeleToSilvermoonCityWeight", 1);
-    WeightTeleToShattrathCity = sConfigMgr->GetOption<int>("Playerbots.TeleToShattrathCityWeight", 1);
-    WeightTeleToDalaran = sConfigMgr->GetOption<int>("Playerbots.TeleToDalaranWeight", 1);
+    ProbTeleToBankers = sConfigMgr->GetOption<float>("Cortex.Bots.ProbTeleToBankers", 0.25f);
+    EnableWeightTeleToCityBankers = sConfigMgr->GetOption<bool>("Cortex.Bots.EnableWeightTeleToCityBankers", false);
+    WeightTeleToStormwind = sConfigMgr->GetOption<int>("Cortex.Bots.TeleToStormwindWeight", 2);
+    WeightTeleToIronforge = sConfigMgr->GetOption<int>("Cortex.Bots.TeleToIronforgeWeight", 1);
+    WeightTeleToDarnassus = sConfigMgr->GetOption<int>("Cortex.Bots.TeleToDarnassusWeight", 1);
+    WeightTeleToExodar = sConfigMgr->GetOption<int>("Cortex.Bots.TeleToExodarWeight", 1);
+    WeightTeleToOrgrimmar = sConfigMgr->GetOption<int>("Cortex.Bots.TeleToOrgrimmarWeight", 2);
+    WeightTeleToUndercity = sConfigMgr->GetOption<int>("Cortex.Bots.TeleToUndercityWeight", 1);
+    WeightTeleToThunderBluff = sConfigMgr->GetOption<int>("Cortex.Bots.TeleToThunderBluffWeight", 1);
+    WeightTeleToSilvermoonCity = sConfigMgr->GetOption<int>("Cortex.Bots.TeleToSilvermoonCityWeight", 1);
+    WeightTeleToShattrathCity = sConfigMgr->GetOption<int>("Cortex.Bots.TeleToShattrathCityWeight", 1);
+    WeightTeleToDalaran = sConfigMgr->GetOption<int>("Cortex.Bots.TeleToDalaranWeight", 1);
     LoadList<std::vector<uint32>>(
-        sConfigMgr->GetOption<std::string>("Playerbots.RandomBotQuestItems",
+        sConfigMgr->GetOption<std::string>("Cortex.Bots.RandomBotQuestItems",
                                            "5175,5176,5177,5178,6948,11000,12382,13704,16309"),
         RandomBotQuestItems);
-    LoadList<std::vector<uint32>>(sConfigMgr->GetOption<std::string>("Playerbots.RandomBotSpellIds", "54197"),
+    LoadList<std::vector<uint32>>(sConfigMgr->GetOption<std::string>("Cortex.Bots.RandomBotSpellIds", "54197"),
                                   RandomBotSpellIds);
     LoadList<std::vector<uint32>>(
-        sConfigMgr->GetOption<std::string>("Playerbots.PvpProhibitedZoneIds",
+        sConfigMgr->GetOption<std::string>("Cortex.Bots.PvpProhibitedZoneIds",
                                            "2255,656,2361,2362,2363,976,35,2268,3425,392,541,1446,3828,3712,3738,3565,"
                                            "3539,3623,4152,3988,4658,4284,4418,4436,4275,4323,4395,3703,4298,3951"),
         PvpProhibitedZoneIds);
     LoadList<std::vector<uint32>>(
-        sConfigMgr->GetOption<std::string>("Playerbots.PvpProhibitedAreaIds",
+        sConfigMgr->GetOption<std::string>("Cortex.Bots.PvpProhibitedAreaIds",
                                            "976,35,392,2268,4161,4010,4317,4312,3649,3887,3958,3724,4080,3938,3754,3786,"
                                            "3973,4085,4086,4087,4088,251"),
         PvpProhibitedAreaIds);
-    FastReactInBG = sConfigMgr->GetOption<bool>("Playerbots.FastReactInBG", true);
+    FastReactInBG = sConfigMgr->GetOption<bool>("Cortex.Bots.FastReactInBG", true);
     LoadList<std::vector<uint32>>(
-        sConfigMgr->GetOption<std::string>("Playerbots.RandomBotQuestIds", "3802,5505,6502,7761,7848,10277,10285,11492,"
+        sConfigMgr->GetOption<std::string>("Cortex.Bots.RandomBotQuestIds", "3802,5505,6502,7761,7848,10277,10285,11492,"
                                            "13188,13189,24499,24511,24710,24712"),
         RandomBotQuestIds);
 
     LoadSet<std::set<uint32>>(
-        sConfigMgr->GetOption<std::string>("Playerbots.DisallowedGameObjects",
+        sConfigMgr->GetOption<std::string>("Cortex.Bots.DisallowedGameObjects",
                                            "176213,17155,2656,74448,19020,3719,3658,3705,3706,105579,75293,2857,"
                                            "179490,141596,160836,160845,179516,176224,181085,176112,128308,128403,"
                                            "165739,165738,175245,175970,176325,176327,123329,2560"),
         DisallowedGameObjects);
     LoadSet<std::set<uint32>>(
-        sConfigMgr->GetOption<std::string>("Playerbots.AttunementQuests", "10279,10277,10282,10283,10284,10285,10296,"
+        sConfigMgr->GetOption<std::string>("Cortex.Bots.AttunementQuests", "10279,10277,10282,10283,10284,10285,10296,"
                                            "10297,10298,11481,11482,11488,11490,11492,10901,10888,10445,10985"),
         AttunementQuests);
 
     LoadSet<std::set<uint32>>(
-        sConfigMgr->GetOption<std::string>("Playerbots.UnobtainableItems", "12468,44869,44870,46978"),
+        sConfigMgr->GetOption<std::string>("Cortex.Bots.UnobtainableItems", "12468,44869,44870,46978"),
         UnobtainableItems);
 
-    BotAutologin = sConfigMgr->GetOption<bool>("Playerbots.BotAutologin", false);
-    RandomBotAutologin = sConfigMgr->GetOption<bool>("Playerbots.RandomBotAutologin", true);
-    MinRandomBots = sConfigMgr->GetOption<int32>("Playerbots.MinRandomBots", 500);
-    MaxRandomBots = sConfigMgr->GetOption<int32>("Playerbots.MaxRandomBots", 500);
-    RandomBotUpdateInterval = sConfigMgr->GetOption<int32>("Playerbots.RandomBotUpdateInterval", 20);
+    BotAutologin = sConfigMgr->GetOption<bool>("Cortex.Bots.BotAutologin", false);
+    RandomBotAutologin = sConfigMgr->GetOption<bool>("Cortex.Bots.RandomBotAutologin", true);
+    MinRandomBots = sConfigMgr->GetOption<int32>("Cortex.Bots.MinRandomBots", 500);
+    MaxRandomBots = sConfigMgr->GetOption<int32>("Cortex.Bots.MaxRandomBots", 500);
+    RandomBotUpdateInterval = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotUpdateInterval", 20);
     RandomBotCountChangeMinInterval =
-        sConfigMgr->GetOption<int32>("Playerbots.RandomBotCountChangeMinInterval", 30 * MINUTE);
+        sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotCountChangeMinInterval", 30 * MINUTE);
     RandomBotCountChangeMaxInterval =
-        sConfigMgr->GetOption<int32>("Playerbots.RandomBotCountChangeMaxInterval", 2 * HOUR);
-    MinRandomBotInWorldTime = sConfigMgr->GetOption<int32>("Playerbots.MinRandomBotInWorldTime", 2 * HOUR);
-    MaxRandomBotInWorldTime = sConfigMgr->GetOption<int32>("Playerbots.MaxRandomBotInWorldTime", 14 * 24 * HOUR);
-    MinRandomBotRandomizeTime = sConfigMgr->GetOption<int32>("Playerbots.MinRandomBotRandomizeTime", 2 * HOUR);
-    MaxRandomBotRandomizeTime = sConfigMgr->GetOption<int32>("Playerbots.MaxRandomBotRandomizeTime", 14 * 24 * HOUR);
+        sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotCountChangeMaxInterval", 2 * HOUR);
+    MinRandomBotInWorldTime = sConfigMgr->GetOption<int32>("Cortex.Bots.MinRandomBotInWorldTime", 2 * HOUR);
+    MaxRandomBotInWorldTime = sConfigMgr->GetOption<int32>("Cortex.Bots.MaxRandomBotInWorldTime", 14 * 24 * HOUR);
+    MinRandomBotRandomizeTime = sConfigMgr->GetOption<int32>("Cortex.Bots.MinRandomBotRandomizeTime", 2 * HOUR);
+    MaxRandomBotRandomizeTime = sConfigMgr->GetOption<int32>("Cortex.Bots.MaxRandomBotRandomizeTime", 14 * 24 * HOUR);
     MinRandomBotChangeStrategyTime =
-        sConfigMgr->GetOption<int32>("Playerbots.MinRandomBotChangeStrategyTime", 30 * MINUTE);
+        sConfigMgr->GetOption<int32>("Cortex.Bots.MinRandomBotChangeStrategyTime", 30 * MINUTE);
     MaxRandomBotChangeStrategyTime =
-        sConfigMgr->GetOption<int32>("Playerbots.MaxRandomBotChangeStrategyTime", 2 * HOUR);
-    MinRandomBotReviveTime = sConfigMgr->GetOption<int32>("Playerbots.MinRandomBotReviveTime", MINUTE);
-    MaxRandomBotReviveTime = sConfigMgr->GetOption<int32>("Playerbots.MaxRandomBotReviveTime", 5 * MINUTE);
-    MinRandomBotTeleportInterval = sConfigMgr->GetOption<int32>("Playerbots.MinRandomBotTeleportInterval", 1 * HOUR);
-    MaxRandomBotTeleportInterval = sConfigMgr->GetOption<int32>("Playerbots.MaxRandomBotTeleportInterval", 5 * HOUR);
+        sConfigMgr->GetOption<int32>("Cortex.Bots.MaxRandomBotChangeStrategyTime", 2 * HOUR);
+    MinRandomBotReviveTime = sConfigMgr->GetOption<int32>("Cortex.Bots.MinRandomBotReviveTime", MINUTE);
+    MaxRandomBotReviveTime = sConfigMgr->GetOption<int32>("Cortex.Bots.MaxRandomBotReviveTime", 5 * MINUTE);
+    MinRandomBotTeleportInterval = sConfigMgr->GetOption<int32>("Cortex.Bots.MinRandomBotTeleportInterval", 1 * HOUR);
+    MaxRandomBotTeleportInterval = sConfigMgr->GetOption<int32>("Cortex.Bots.MaxRandomBotTeleportInterval", 5 * HOUR);
     PermanentlyInWorldTime =
-        sConfigMgr->GetOption<int32>("Playerbots.PermanentlyInWorldTime", 1 * YEAR);
-    RandomBotTeleportDistance = sConfigMgr->GetOption<int32>("Playerbots.RandomBotTeleportDistance", 100);
-    RandomBotsPerInterval = sConfigMgr->GetOption<int32>("Playerbots.RandomBotsPerInterval", 60);
-    RandomBotPrintStatsInterval = sConfigMgr->GetOption<int32>("Playerbots.RandomBotPrintStatsInterval", 300);
+        sConfigMgr->GetOption<int32>("Cortex.Bots.PermanentlyInWorldTime", 1 * YEAR);
+    RandomBotTeleportDistance = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotTeleportDistance", 100);
+    RandomBotsPerInterval = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotsPerInterval", 60);
+    RandomBotPrintStatsInterval = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotPrintStatsInterval", 300);
     MinRandomBotsPriceChangeInterval =
-        sConfigMgr->GetOption<int32>("Playerbots.MinRandomBotsPriceChangeInterval", 2 * HOUR);
+        sConfigMgr->GetOption<int32>("Cortex.Bots.MinRandomBotsPriceChangeInterval", 2 * HOUR);
     MaxRandomBotsPriceChangeInterval =
-        sConfigMgr->GetOption<int32>("Playerbots.MaxRandomBotsPriceChangeInterval", 48 * HOUR);
-    RandomBotJoinLfg = sConfigMgr->GetOption<bool>("Playerbots.RandomBotJoinLfg", true);
+        sConfigMgr->GetOption<int32>("Cortex.Bots.MaxRandomBotsPriceChangeInterval", 48 * HOUR);
+    RandomBotJoinLfg = sConfigMgr->GetOption<bool>("Cortex.Bots.RandomBotJoinLfg", true);
     RandomBotJoinLfgOutleveledExpansion =
-        sConfigMgr->GetOption<bool>("Playerbots.RandomBotJoinLfgOutleveledExpansion", true);
+        sConfigMgr->GetOption<bool>("Cortex.Bots.RandomBotJoinLfgOutleveledExpansion", true);
 
-    RestrictHealerDPS = sConfigMgr->GetOption<bool>("Playerbots.HealerDPSMapRestriction", false);
+    RestrictHealerDPS = sConfigMgr->GetOption<bool>("Cortex.Bots.HealerDPSMapRestriction", false);
     LoadList<std::vector<uint32>>(
-        sConfigMgr->GetOption<std::string>("Playerbots.RestrictedHealerDPSMaps",
+        sConfigMgr->GetOption<std::string>("Cortex.Bots.RestrictedHealerDPSMaps",
                                              "33,34,36,43,47,48,70,90,109,129,209,229,230,329,349,389,429,1001,1004,"
                                              "1007,269,540,542,543,545,546,547,552,553,554,555,556,557,558,560,585,574,"
                                              "575,576,578,595,599,600,601,602,604,608,619,632,650,658,668,409,469,509,"
@@ -287,34 +287,34 @@ bool PlayerbotAIConfig::Initialize()
 
     //////////////////////////// ICC
 
-    EnableICCBuffs = sConfigMgr->GetOption<bool>("Playerbots.EnableICCBuffs", true);
+    EnableICCBuffs = sConfigMgr->GetOption<bool>("Cortex.Bots.EnableICCBuffs", true);
 
     //////////////////////////// Professions
     ClassMatchingProfessionChance =
-        std::min<uint32>(100, sConfigMgr->GetOption<uint32>("Playerbots.ClassMatchingProfessionChance", 30));
-    FishingDistanceFromMaster = sConfigMgr->GetOption<float>("Playerbots.FishingDistanceFromMaster", 10.0f);
-    EndFishingWithMaster = sConfigMgr->GetOption<float>("Playerbots.EndFishingWithMaster", 30.0f);
-    FishingDistance = sConfigMgr->GetOption<float>("Playerbots.FishingDistance", 40.0f);
-    EnableFishingWithMaster = sConfigMgr->GetOption<bool>("Playerbots.EnableFishingWithMaster", true);
+        std::min<uint32>(100, sConfigMgr->GetOption<uint32>("Cortex.Bots.ClassMatchingProfessionChance", 30));
+    FishingDistanceFromMaster = sConfigMgr->GetOption<float>("Cortex.Bots.FishingDistanceFromMaster", 10.0f);
+    EndFishingWithMaster = sConfigMgr->GetOption<float>("Cortex.Bots.EndFishingWithMaster", 30.0f);
+    FishingDistance = sConfigMgr->GetOption<float>("Cortex.Bots.FishingDistance", 40.0f);
+    EnableFishingWithMaster = sConfigMgr->GetOption<bool>("Cortex.Bots.EnableFishingWithMaster", true);
     //////////////////////////// CHAT
-    EnableBroadcasts = sConfigMgr->GetOption<bool>("Playerbots.EnableBroadcasts", true);
-    RandomBotTalk = sConfigMgr->GetOption<bool>("Playerbots.RandomBotTalk", false);
-    RandomBotEmote = sConfigMgr->GetOption<bool>("Playerbots.RandomBotEmote", false);
-    RandomBotSuggestDungeons = sConfigMgr->GetOption<bool>("Playerbots.RandomBotSuggestDungeons", true);
-    RandomBotSayWithoutMaster = sConfigMgr->GetOption<bool>("Playerbots.RandomBotSayWithoutMaster", false);
-    AnnounceConsumableUse = sConfigMgr->GetOption<bool>("Playerbots.AnnounceConsumableUse", true);
-    EnablePersonas = sConfigMgr->GetOption<bool>("Playerbots.EnablePersonas", true);
-    PersonaTextChance = std::min<uint32>(100, sConfigMgr->GetOption<uint32>("Playerbots.PersonaTextChance", 100));
+    EnableBroadcasts = sConfigMgr->GetOption<bool>("Cortex.Bots.EnableBroadcasts", true);
+    RandomBotTalk = sConfigMgr->GetOption<bool>("Cortex.Bots.RandomBotTalk", false);
+    RandomBotEmote = sConfigMgr->GetOption<bool>("Cortex.Bots.RandomBotEmote", false);
+    RandomBotSuggestDungeons = sConfigMgr->GetOption<bool>("Cortex.Bots.RandomBotSuggestDungeons", true);
+    RandomBotSayWithoutMaster = sConfigMgr->GetOption<bool>("Cortex.Bots.RandomBotSayWithoutMaster", false);
+    AnnounceConsumableUse = sConfigMgr->GetOption<bool>("Cortex.Bots.AnnounceConsumableUse", true);
+    EnablePersonas = sConfigMgr->GetOption<bool>("Cortex.Bots.EnablePersonas", true);
+    PersonaTextChance = std::min<uint32>(100, sConfigMgr->GetOption<uint32>("Cortex.Bots.PersonaTextChance", 100));
 
-    TelemetryEnabled = sConfigMgr->GetOption<bool>("Playerbots.Telemetry.Enable", false);
-    TelemetryActions = sConfigMgr->GetOption<bool>("Playerbots.Telemetry.Actions", true);
-    TelemetryNearRadius = sConfigMgr->GetOption<uint32>("Playerbots.Telemetry.NearRadius", 150);
+    TelemetryEnabled = sConfigMgr->GetOption<bool>("Cortex.Bots.Telemetry.Enable", false);
+    TelemetryActions = sConfigMgr->GetOption<bool>("Cortex.Bots.Telemetry.Actions", true);
+    TelemetryNearRadius = sConfigMgr->GetOption<uint32>("Cortex.Bots.Telemetry.NearRadius", 150);
     TelemetrySampleNearMs =
-        std::max<uint32>(500, sConfigMgr->GetOption<uint32>("Playerbots.Telemetry.SampleNearMs", 2000));
+        std::max<uint32>(500, sConfigMgr->GetOption<uint32>("Cortex.Bots.Telemetry.SampleNearMs", 2000));
     TelemetrySampleFarMs =
-        std::max<uint32>(5000, sConfigMgr->GetOption<uint32>("Playerbots.Telemetry.SampleFarMs", 60000));
+        std::max<uint32>(5000, sConfigMgr->GetOption<uint32>("Cortex.Bots.Telemetry.SampleFarMs", 60000));
     TelemetryRetentionHours =
-        std::max<uint32>(1, sConfigMgr->GetOption<uint32>("Playerbots.Telemetry.RetentionHours", 48));
+        std::max<uint32>(1, sConfigMgr->GetOption<uint32>("Cortex.Bots.Telemetry.RetentionHours", 48));
 
     // broadcastChanceMaxValue is used in urand(1, broadcastChanceMaxValue) for broadcasts,
     // lowering it will increase the chance, setting it to 0 will disable broadcasts
@@ -323,117 +323,117 @@ bool PlayerbotAIConfig::Initialize()
 
     // all broadcast chances should be in range 1-broadcastChanceMaxValue, value of 0 will disable this particular
     // broadcast setting value to max does not guarantee the broadcast, as there are some internal randoms as well
-    BroadcastToGuildGlobalChance = sConfigMgr->GetOption<int32>("Playerbots.BroadcastToGuildGlobalChance", 30000);
-    BroadcastToWorldGlobalChance = sConfigMgr->GetOption<int32>("Playerbots.BroadcastToWorldGlobalChance", 30000);
-    BroadcastToGeneralGlobalChance = sConfigMgr->GetOption<int32>("Playerbots.BroadcastToGeneralGlobalChance", 30000);
-    BroadcastToTradeGlobalChance = sConfigMgr->GetOption<int32>("Playerbots.BroadcastToTradeGlobalChance", 30000);
-    BroadcastToLFGGlobalChance = sConfigMgr->GetOption<int32>("Playerbots.BroadcastToLFGGlobalChance", 30000);
+    BroadcastToGuildGlobalChance = sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastToGuildGlobalChance", 30000);
+    BroadcastToWorldGlobalChance = sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastToWorldGlobalChance", 30000);
+    BroadcastToGeneralGlobalChance = sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastToGeneralGlobalChance", 30000);
+    BroadcastToTradeGlobalChance = sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastToTradeGlobalChance", 30000);
+    BroadcastToLFGGlobalChance = sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastToLFGGlobalChance", 30000);
     BroadcastToLocalDefenseGlobalChance =
-        sConfigMgr->GetOption<int32>("Playerbots.BroadcastToLocalDefenseGlobalChance", 30000);
+        sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastToLocalDefenseGlobalChance", 30000);
     BroadcastToWorldDefenseGlobalChance =
-        sConfigMgr->GetOption<int32>("Playerbots.BroadcastToWorldDefenseGlobalChance", 30000);
+        sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastToWorldDefenseGlobalChance", 30000);
     BroadcastToGuildRecruitmentGlobalChance =
-        sConfigMgr->GetOption<int32>("Playerbots.BroadcastToGuildRecruitmentGlobalChance", 30000);
+        sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastToGuildRecruitmentGlobalChance", 30000);
 
-    BroadcastChanceLootingItemPoor = sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceLootingItemPoor", 30);
+    BroadcastChanceLootingItemPoor = sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceLootingItemPoor", 30);
     BroadcastChanceLootingItemNormal =
-        sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceLootingItemNormal", 300);
+        sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceLootingItemNormal", 300);
     BroadcastChanceLootingItemUncommon =
-        sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceLootingItemUncommon", 10000);
-    BroadcastChanceLootingItemRare = sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceLootingItemRare", 20000);
-    BroadcastChanceLootingItemEpic = sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceLootingItemEpic", 30000);
+        sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceLootingItemUncommon", 10000);
+    BroadcastChanceLootingItemRare = sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceLootingItemRare", 20000);
+    BroadcastChanceLootingItemEpic = sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceLootingItemEpic", 30000);
     BroadcastChanceLootingItemLegendary =
-        sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceLootingItemLegendary", 30000);
+        sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceLootingItemLegendary", 30000);
     BroadcastChanceLootingItemArtifact =
-        sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceLootingItemArtifact", 30000);
+        sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceLootingItemArtifact", 30000);
 
-    BroadcastChanceQuestAccepted = sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceQuestAccepted", 6000);
+    BroadcastChanceQuestAccepted = sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceQuestAccepted", 6000);
     BroadcastChanceQuestUpdateObjectiveCompleted =
-        sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceQuestUpdateObjectiveCompleted", 300);
+        sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceQuestUpdateObjectiveCompleted", 300);
     BroadcastChanceQuestUpdateObjectiveProgress =
-        sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceQuestUpdateObjectiveProgress", 300);
+        sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceQuestUpdateObjectiveProgress", 300);
     BroadcastChanceQuestUpdateFailedTimer =
-        sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceQuestUpdateFailedTimer", 300);
+        sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceQuestUpdateFailedTimer", 300);
     BroadcastChanceQuestUpdateComplete =
-        sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceQuestUpdateComplete", 1000);
-    BroadcastChanceQuestTurnedIn = sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceQuestTurnedIn", 10000);
+        sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceQuestUpdateComplete", 1000);
+    BroadcastChanceQuestTurnedIn = sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceQuestTurnedIn", 10000);
 
-    BroadcastChanceKillNormal = sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceKillNormal", 30);
-    BroadcastChanceKillElite = sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceKillElite", 300);
-    BroadcastChanceKillRareelite = sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceKillRareelite", 3000);
-    BroadcastChanceKillWorldboss = sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceKillWorldboss", 20000);
-    BroadcastChanceKillRare = sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceKillRare", 10000);
-    BroadcastChanceKillUnknown = sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceKillUnknown", 100);
-    BroadcastChanceKillPet = sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceKillPet", 10);
-    BroadcastChanceKillPlayer = sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceKillPlayer", 30);
+    BroadcastChanceKillNormal = sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceKillNormal", 30);
+    BroadcastChanceKillElite = sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceKillElite", 300);
+    BroadcastChanceKillRareelite = sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceKillRareelite", 3000);
+    BroadcastChanceKillWorldboss = sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceKillWorldboss", 20000);
+    BroadcastChanceKillRare = sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceKillRare", 10000);
+    BroadcastChanceKillUnknown = sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceKillUnknown", 100);
+    BroadcastChanceKillPet = sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceKillPet", 10);
+    BroadcastChanceKillPlayer = sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceKillPlayer", 30);
 
-    BroadcastChanceLevelupGeneric = sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceLevelupGeneric", 20000);
-    BroadcastChanceLevelupTenX = sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceLevelupTenX", 30000);
-    BroadcastChanceLevelupMaxLevel = sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceLevelupMaxLevel", 30000);
+    BroadcastChanceLevelupGeneric = sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceLevelupGeneric", 20000);
+    BroadcastChanceLevelupTenX = sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceLevelupTenX", 30000);
+    BroadcastChanceLevelupMaxLevel = sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceLevelupMaxLevel", 30000);
 
-    BroadcastChanceSuggestInstance = sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceSuggestInstance", 5000);
-    BroadcastChanceSuggestQuest = sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceSuggestQuest", 10000);
+    BroadcastChanceSuggestInstance = sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceSuggestInstance", 5000);
+    BroadcastChanceSuggestQuest = sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceSuggestQuest", 10000);
     BroadcastChanceSuggestGrindMaterials =
-        sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceSuggestGrindMaterials", 5000);
+        sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceSuggestGrindMaterials", 5000);
     BroadcastChanceSuggestGrindReputation =
-        sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceSuggestGrindReputation", 5000);
-    BroadcastChanceSuggestSell = sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceSuggestSell", 300);
+        sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceSuggestGrindReputation", 5000);
+    BroadcastChanceSuggestSell = sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceSuggestSell", 300);
     BroadcastChanceSuggestSomething =
-        sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceSuggestSomething", 30000);
+        sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceSuggestSomething", 30000);
 
     BroadcastChanceSuggestSomethingToxic =
-        sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceSuggestSomethingToxic", 0);
+        sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceSuggestSomethingToxic", 0);
 
-    BroadcastChanceSuggestToxicLinks = sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceSuggestToxicLinks", 0);
-    ToxicLinksPrefix = sConfigMgr->GetOption<std::string>("Playerbots.ToxicLinksPrefix", "gnomes");
+    BroadcastChanceSuggestToxicLinks = sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceSuggestToxicLinks", 0);
+    ToxicLinksPrefix = sConfigMgr->GetOption<std::string>("Cortex.Bots.ToxicLinksPrefix", "gnomes");
 
     BroadcastChanceSuggestThunderfury =
-        sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceSuggestThunderfury", 1);
+        sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceSuggestThunderfury", 1);
 
     // does not depend on global chance
-    BroadcastChanceGuildManagement = sConfigMgr->GetOption<int32>("Playerbots.BroadcastChanceGuildManagement", 30000);
+    BroadcastChanceGuildManagement = sConfigMgr->GetOption<int32>("Cortex.Bots.BroadcastChanceGuildManagement", 30000);
 
-    ToxicLinksRepliesChance = sConfigMgr->GetOption<int32>("Playerbots.ToxicLinksRepliesChance", 30);    // 0-100
-    ThunderfuryRepliesChance = sConfigMgr->GetOption<int32>("Playerbots.ThunderfuryRepliesChance", 40);  // 0-100
-    GuildRepliesRate = sConfigMgr->GetOption<int32>("Playerbots.GuildRepliesRate", 100);                 // 0-100
+    ToxicLinksRepliesChance = sConfigMgr->GetOption<int32>("Cortex.Bots.ToxicLinksRepliesChance", 30);    // 0-100
+    ThunderfuryRepliesChance = sConfigMgr->GetOption<int32>("Cortex.Bots.ThunderfuryRepliesChance", 40);  // 0-100
+    GuildRepliesRate = sConfigMgr->GetOption<int32>("Cortex.Bots.GuildRepliesRate", 100);                 // 0-100
 
-    RandomBotJoinBG = sConfigMgr->GetOption<bool>("Playerbots.RandomBotJoinBG", true);
-    RandomBotAutoJoinBG = sConfigMgr->GetOption<bool>("Playerbots.RandomBotAutoJoinBG", false);
+    RandomBotJoinBG = sConfigMgr->GetOption<bool>("Cortex.Bots.RandomBotJoinBG", true);
+    RandomBotAutoJoinBG = sConfigMgr->GetOption<bool>("Cortex.Bots.RandomBotAutoJoinBG", false);
 
-    RandomBotAutoJoinArenaBracket = sConfigMgr->GetOption<int32>("Playerbots.RandomBotAutoJoinArenaBracket", 14);
+    RandomBotAutoJoinArenaBracket = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotAutoJoinArenaBracket", 14);
 
-    RandomBotAutoJoinWSBrackets = sConfigMgr->GetOption<std::string>("Playerbots.RandomBotAutoJoinWSBrackets", "7");
-    RandomBotAutoJoinABBrackets = sConfigMgr->GetOption<std::string>("Playerbots.RandomBotAutoJoinABBrackets", "6");
-    RandomBotAutoJoinAVBrackets = sConfigMgr->GetOption<std::string>("Playerbots.RandomBotAutoJoinAVBrackets", "3");
-    RandomBotAutoJoinEYBrackets = sConfigMgr->GetOption<std::string>("Playerbots.RandomBotAutoJoinEYBrackets", "2");
-    RandomBotAutoJoinICBrackets = sConfigMgr->GetOption<std::string>("Playerbots.RandomBotAutoJoinICBrackets", "1");
+    RandomBotAutoJoinWSBrackets = sConfigMgr->GetOption<std::string>("Cortex.Bots.RandomBotAutoJoinWSBrackets", "7");
+    RandomBotAutoJoinABBrackets = sConfigMgr->GetOption<std::string>("Cortex.Bots.RandomBotAutoJoinABBrackets", "6");
+    RandomBotAutoJoinAVBrackets = sConfigMgr->GetOption<std::string>("Cortex.Bots.RandomBotAutoJoinAVBrackets", "3");
+    RandomBotAutoJoinEYBrackets = sConfigMgr->GetOption<std::string>("Cortex.Bots.RandomBotAutoJoinEYBrackets", "2");
+    RandomBotAutoJoinICBrackets = sConfigMgr->GetOption<std::string>("Cortex.Bots.RandomBotAutoJoinICBrackets", "1");
 
-    RandomBotAutoJoinBGWSCount = sConfigMgr->GetOption<int32>("Playerbots.RandomBotAutoJoinBGWSCount", 1);
-    RandomBotAutoJoinBGABCount = sConfigMgr->GetOption<int32>("Playerbots.RandomBotAutoJoinBGABCount", 1);
-    RandomBotAutoJoinBGAVCount = sConfigMgr->GetOption<int32>("Playerbots.RandomBotAutoJoinBGAVCount", 0);
-    RandomBotAutoJoinBGEYCount = sConfigMgr->GetOption<int32>("Playerbots.RandomBotAutoJoinBGEYCount", 1);
-    RandomBotAutoJoinBGICCount = sConfigMgr->GetOption<int32>("Playerbots.RandomBotAutoJoinBGICCount", 0);
+    RandomBotAutoJoinBGWSCount = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotAutoJoinBGWSCount", 1);
+    RandomBotAutoJoinBGABCount = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotAutoJoinBGABCount", 1);
+    RandomBotAutoJoinBGAVCount = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotAutoJoinBGAVCount", 0);
+    RandomBotAutoJoinBGEYCount = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotAutoJoinBGEYCount", 1);
+    RandomBotAutoJoinBGICCount = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotAutoJoinBGICCount", 0);
 
     RandomBotAutoJoinBGRatedArena2v2Count =
-        sConfigMgr->GetOption<int32>("Playerbots.RandomBotAutoJoinBGRatedArena2v2Count", 0);
+        sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotAutoJoinBGRatedArena2v2Count", 0);
     RandomBotAutoJoinBGRatedArena3v3Count =
-        sConfigMgr->GetOption<int32>("Playerbots.RandomBotAutoJoinBGRatedArena3v3Count", 0);
+        sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotAutoJoinBGRatedArena3v3Count", 0);
     RandomBotAutoJoinBGRatedArena5v5Count =
-        sConfigMgr->GetOption<int32>("Playerbots.RandomBotAutoJoinBGRatedArena5v5Count", 0);
-    LogInGroupOnly = sConfigMgr->GetOption<bool>("Playerbots.LogInGroupOnly", true);
-    LogValuesPerTick = sConfigMgr->GetOption<bool>("Playerbots.LogValuesPerTick", false);
-    SummonAtInnkeepersEnabled = sConfigMgr->GetOption<bool>("Playerbots.SummonAtInnkeepersEnabled", true);
-    RandomBotMinLevel = sConfigMgr->GetOption<int32>("Playerbots.RandomBotMinLevel", 1);
-    RandomBotMaxLevel = sConfigMgr->GetOption<int32>("Playerbots.RandomBotMaxLevel", 80);
+        sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotAutoJoinBGRatedArena5v5Count", 0);
+    LogInGroupOnly = sConfigMgr->GetOption<bool>("Cortex.Bots.LogInGroupOnly", true);
+    LogValuesPerTick = sConfigMgr->GetOption<bool>("Cortex.Bots.LogValuesPerTick", false);
+    SummonAtInnkeepersEnabled = sConfigMgr->GetOption<bool>("Cortex.Bots.SummonAtInnkeepersEnabled", true);
+    RandomBotMinLevel = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotMinLevel", 1);
+    RandomBotMaxLevel = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotMaxLevel", 80);
     if (RandomBotMaxLevel > sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL))
         RandomBotMaxLevel = sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL);
 
     // Bracket defaults (below) derive from randomBotMaxLevel, so this must run after it is read.
     LoadRandomBotLevelConfig();
 
-    RandomBotTeleLowerLevel = sConfigMgr->GetOption<int32>("Playerbots.RandomBotTeleLowerLevel", 1);
-    RandomBotTeleHigherLevel = sConfigMgr->GetOption<int32>("Playerbots.RandomBotTeleHigherLevel", 3);
-    OpenGoSpell = sConfigMgr->GetOption<int32>("Playerbots.OpenGoSpell", 6477);
+    RandomBotTeleLowerLevel = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotTeleLowerLevel", 1);
+    RandomBotTeleHigherLevel = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotTeleHigherLevel", 3);
+    OpenGoSpell = sConfigMgr->GetOption<int32>("Cortex.Bots.OpenGoSpell", 6477);
 
     // Zones for NewRpgStrategy teleportation brackets
     std::vector<uint32> zoneIds = {
@@ -455,7 +455,7 @@ bool PlayerbotAIConfig::Initialize()
 
     for (uint32 zoneId : zoneIds)
     {
-        std::string setting = "Playerbots.ZoneBracket." + std::to_string(zoneId);
+        std::string setting = "Cortex.Bots.ZoneBracket." + std::to_string(zoneId);
         std::string value = sConfigMgr->GetOption<std::string>(setting, "");
 
         if (!value.empty())
@@ -470,32 +470,32 @@ bool PlayerbotAIConfig::Initialize()
         }
     }
 
-    RandomChangeMultiplier = sConfigMgr->GetOption<float>("Playerbots.RandomChangeMultiplier", 1.0);
+    RandomChangeMultiplier = sConfigMgr->GetOption<float>("Cortex.Bots.RandomChangeMultiplier", 1.0);
 
-    RandomBotCombatStrategies = sConfigMgr->GetOption<std::string>("Playerbots.RandomBotCombatStrategies", "");
-    RandomBotNonCombatStrategies = sConfigMgr->GetOption<std::string>("Playerbots.RandomBotNonCombatStrategies", "");
-    CombatStrategies = sConfigMgr->GetOption<std::string>("Playerbots.CombatStrategies", "");
-    NonCombatStrategies = sConfigMgr->GetOption<std::string>("Playerbots.NonCombatStrategies", "");
-    ReactStrategies = sConfigMgr->GetOption<std::string>("Playerbots.ReactStrategies", "");
-    RandomBotReactStrategies = sConfigMgr->GetOption<std::string>("Playerbots.RandomBotReactStrategies", "");
-    ApplyInstanceStrategies = sConfigMgr->GetOption<bool>("Playerbots.ApplyInstanceStrategies", true);
+    RandomBotCombatStrategies = sConfigMgr->GetOption<std::string>("Cortex.Bots.RandomBotCombatStrategies", "");
+    RandomBotNonCombatStrategies = sConfigMgr->GetOption<std::string>("Cortex.Bots.RandomBotNonCombatStrategies", "");
+    CombatStrategies = sConfigMgr->GetOption<std::string>("Cortex.Bots.CombatStrategies", "");
+    NonCombatStrategies = sConfigMgr->GetOption<std::string>("Cortex.Bots.NonCombatStrategies", "");
+    ReactStrategies = sConfigMgr->GetOption<std::string>("Cortex.Bots.ReactStrategies", "");
+    RandomBotReactStrategies = sConfigMgr->GetOption<std::string>("Cortex.Bots.RandomBotReactStrategies", "");
+    ApplyInstanceStrategies = sConfigMgr->GetOption<bool>("Cortex.Bots.ApplyInstanceStrategies", true);
 
-    CommandPrefix = sConfigMgr->GetOption<std::string>("Playerbots.CommandPrefix", "");
-    CommandSeparator = sConfigMgr->GetOption<std::string>("Playerbots.CommandSeparator", "\\\\");
+    CommandPrefix = sConfigMgr->GetOption<std::string>("Cortex.Bots.CommandPrefix", "");
+    CommandSeparator = sConfigMgr->GetOption<std::string>("Cortex.Bots.CommandSeparator", "\\\\");
 
-    CommandServerPort = sConfigMgr->GetOption<int32>("Playerbots.CommandServerPort", 8888);
-    PerfMonEnabled = sConfigMgr->GetOption<bool>("Playerbots.PerfMonEnabled", false);
+    CommandServerPort = sConfigMgr->GetOption<int32>("Cortex.Bots.CommandServerPort", 8888);
+    PerfMonEnabled = sConfigMgr->GetOption<bool>("Cortex.Bots.PerfMonEnabled", false);
 
-    UseGroundMountAtMinLevel = sConfigMgr->GetOption<int32>("Playerbots.UseGroundMountAtMinLevel", 20);
-    UseFastGroundMountAtMinLevel = sConfigMgr->GetOption<int32>("Playerbots.UseFastGroundMountAtMinLevel", 40);
-    UseFlyMountAtMinLevel = sConfigMgr->GetOption<int32>("Playerbots.UseFlyMountAtMinLevel", 60);
-    UseFastFlyMountAtMinLevel = sConfigMgr->GetOption<int32>("Playerbots.UseFastFlyMountAtMinLevel", 70);
+    UseGroundMountAtMinLevel = sConfigMgr->GetOption<int32>("Cortex.Bots.UseGroundMountAtMinLevel", 20);
+    UseFastGroundMountAtMinLevel = sConfigMgr->GetOption<int32>("Cortex.Bots.UseFastGroundMountAtMinLevel", 40);
+    UseFlyMountAtMinLevel = sConfigMgr->GetOption<int32>("Cortex.Bots.UseFlyMountAtMinLevel", 60);
+    UseFastFlyMountAtMinLevel = sConfigMgr->GetOption<int32>("Cortex.Bots.UseFastFlyMountAtMinLevel", 70);
 
     // stagger bot flightpath takeoff
-    BotTaxiDelayMin = sConfigMgr->GetOption<uint32>("Playerbots.BotTaxiDelayMinMs", 350);
-    BotTaxiDelayMax = sConfigMgr->GetOption<uint32>("Playerbots.BotTaxiDelayMaxMs", 5000);
-    BotTaxiGapMs = sConfigMgr->GetOption<uint32>("Playerbots.BotTaxiGapMs", 200);
-    BotTaxiGapJitterMs = sConfigMgr->GetOption<uint32>("Playerbots.BotTaxiGapJitterMs", 100);
+    BotTaxiDelayMin = sConfigMgr->GetOption<uint32>("Cortex.Bots.BotTaxiDelayMinMs", 350);
+    BotTaxiDelayMax = sConfigMgr->GetOption<uint32>("Cortex.Bots.BotTaxiDelayMaxMs", 5000);
+    BotTaxiGapMs = sConfigMgr->GetOption<uint32>("Cortex.Bots.BotTaxiGapMs", 200);
+    BotTaxiGapJitterMs = sConfigMgr->GetOption<uint32>("Cortex.Bots.BotTaxiGapJitterMs", 100);
 
     LOG_INFO("server.loading", "Loading TalentSpecs...");
 
@@ -508,11 +508,11 @@ bool PlayerbotAIConfig::Initialize()
         for (uint32 spec = 0; spec < MAX_SPECNO; ++spec)
         {
             std::ostringstream os;
-            os << "Playerbots.PremadeSpecName." << cls << "." << spec;
+            os << "Cortex.Bots.PremadeSpecName." << cls << "." << spec;
             PremadeSpecName[cls][spec] = sConfigMgr->GetOption<std::string>(os.str().c_str(), "", false);
             os.str("");
             os.clear();
-            os << "Playerbots.PremadeSpecGlyph." << cls << "." << spec;
+            os << "Cortex.Bots.PremadeSpecGlyph." << cls << "." << spec;
             PremadeSpecGlyph[cls][spec] = sConfigMgr->GetOption<std::string>(os.str().c_str(), "", false);
             std::vector<std::string> splitSpecGlyph = split(PremadeSpecGlyph[cls][spec], ',');
             for (std::string& split : splitSpecGlyph)
@@ -525,7 +525,7 @@ bool PlayerbotAIConfig::Initialize()
             for (uint32 level = 0; level < MAX_LEVEL; ++level)
             {
                 std::ostringstream os;
-                os << "Playerbots.PremadeSpecLink." << cls << "." << spec << "." << level;
+                os << "Cortex.Bots.PremadeSpecLink." << cls << "." << spec << "." << level;
                 PremadeSpecLink[cls][spec][level] = sConfigMgr->GetOption<std::string>(os.str().c_str(), "", false);
                 ParsedSpecLinkOrder[cls][spec][level] = ParseTempTalentsOrder(cls, PremadeSpecLink[cls][spec][level]);
             }
@@ -535,7 +535,7 @@ bool PlayerbotAIConfig::Initialize()
             for (uint32 points = 0; points < 21; ++points)
             {
                 std::ostringstream os;
-                os << "Playerbots.PremadeHunterPetLink." << spec << "." << points;
+                os << "Cortex.Bots.PremadeHunterPetLink." << spec << "." << points;
                 PremadeHunterPetLink[spec][points] = sConfigMgr->GetOption<std::string>(os.str().c_str(), "", false);
                 ParsedHunterPetLinkOrder[spec][points] =
                     ParseTempPetTalentsOrder(spec, PremadeHunterPetLink[spec][points]);
@@ -544,7 +544,7 @@ bool PlayerbotAIConfig::Initialize()
         for (uint32 spec = 0; spec < MAX_SPECNO; ++spec)
         {
             std::ostringstream os;
-            os << "Playerbots.RandomClassSpecProb." << cls << "." << spec;
+            os << "Cortex.Bots.RandomClassSpecProb." << cls << "." << spec;
             uint32 def;
             if (spec <= 1)
                 def = 33;
@@ -555,13 +555,13 @@ bool PlayerbotAIConfig::Initialize()
             RandomClassSpecProb[cls][spec] = sConfigMgr->GetOption<uint32>(os.str().c_str(), def, false);
             os.str("");
             os.clear();
-            os << "Playerbots.RandomClassSpecIndex." << cls << "." << spec;
+            os << "Cortex.Bots.RandomClassSpecIndex." << cls << "." << spec;
             RandomClassSpecIndex[cls][spec] = sConfigMgr->GetOption<uint32>(os.str().c_str(), spec, false);
         }
     }
 
     BotCheats.clear();
-    LoadListString<std::vector<std::string>>(sConfigMgr->GetOption<std::string>("Playerbots.BotCheats", "food,taxi,raid"),
+    LoadListString<std::vector<std::string>>(sConfigMgr->GetOption<std::string>("Cortex.Bots.BotCheats", "food,taxi,raid"),
                                              BotCheats);
 
     BotCheatMask = 0;
@@ -581,39 +581,39 @@ bool PlayerbotAIConfig::Initialize()
     if (std::find(BotCheats.begin(), BotCheats.end(), "raid") != BotCheats.end())
         BotCheatMask |= (uint32)BotCheatMask::raid;
 
-    LoadListString<std::vector<std::string>>(sConfigMgr->GetOption<std::string>("Playerbots.AllowedLogFiles", ""),
+    LoadListString<std::vector<std::string>>(sConfigMgr->GetOption<std::string>("Cortex.Bots.AllowedLogFiles", ""),
                                              AllowedLogFiles);
-    EnableAutoTradeOnItemMention = sConfigMgr->GetOption<bool>("Playerbots.EnableAutoTradeOnItemMention", true);
-    LoadListString<std::vector<std::string>>(sConfigMgr->GetOption<std::string>("Playerbots.TradeActionExcludedPrefixes", ""),
+    EnableAutoTradeOnItemMention = sConfigMgr->GetOption<bool>("Cortex.Bots.EnableAutoTradeOnItemMention", true);
+    LoadListString<std::vector<std::string>>(sConfigMgr->GetOption<std::string>("Cortex.Bots.TradeActionExcludedPrefixes", ""),
                                              TradeActionExcludedPrefixes);
 
     WorldBuffs.clear();
     LoadWorldBuff();
     LOG_INFO("playerbots", "Loading World Buff Feature...");
 
-    RandomBotAccountPrefix = sConfigMgr->GetOption<std::string>("Playerbots.RandomBotAccountPrefix", "rndbot");
-    RandomBotAccountCount = sConfigMgr->GetOption<int32>("Playerbots.RandomBotAccountCount", 0);
-    DeleteRandomBotAccounts = sConfigMgr->GetOption<bool>("Playerbots.DeleteRandomBotAccounts", false);
-    RandomBotGuildCount = sConfigMgr->GetOption<int32>("Playerbots.RandomBotGuildCount", 20);
-    RandomBotGuildSizeMax = sConfigMgr->GetOption<int32>("Playerbots.RandomBotGuildSizeMax", 15);
-    RandomBotGuildFounderChance = sConfigMgr->GetOption<int32>("Playerbots.RandomBotGuildFounderChance", 5);
-    DeleteRandomBotGuilds = sConfigMgr->GetOption<bool>("Playerbots.DeleteRandomBotGuilds", false);
+    RandomBotAccountPrefix = sConfigMgr->GetOption<std::string>("Cortex.Bots.RandomBotAccountPrefix", "rndbot");
+    RandomBotAccountCount = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotAccountCount", 0);
+    DeleteRandomBotAccounts = sConfigMgr->GetOption<bool>("Cortex.Bots.DeleteRandomBotAccounts", false);
+    RandomBotGuildCount = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotGuildCount", 20);
+    RandomBotGuildSizeMax = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotGuildSizeMax", 15);
+    RandomBotGuildFounderChance = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotGuildFounderChance", 5);
+    DeleteRandomBotGuilds = sConfigMgr->GetOption<bool>("Cortex.Bots.DeleteRandomBotGuilds", false);
 
-    BotSendMailEnabled = sConfigMgr->GetOption<bool>("Playerbots.BotSendMailEnabled", true);
+    BotSendMailEnabled = sConfigMgr->GetOption<bool>("Cortex.Bots.BotSendMailEnabled", true);
 
-    GuildTaskEnabled = sConfigMgr->GetOption<bool>("Playerbots.EnableGuildTasks", false);
-    MinGuildTaskChangeTime = sConfigMgr->GetOption<int32>("Playerbots.MinGuildTaskChangeTime", 3 * 24 * 3600);
-    MaxGuildTaskChangeTime = sConfigMgr->GetOption<int32>("Playerbots.MaxGuildTaskChangeTime", 4 * 24 * 3600);
-    MinGuildTaskAdvertisementTime = sConfigMgr->GetOption<int32>("Playerbots.MinGuildTaskAdvertisementTime", 300);
-    MaxGuildTaskAdvertisementTime = sConfigMgr->GetOption<int32>("Playerbots.MaxGuildTaskAdvertisementTime", 12 * 3600);
-    MinGuildTaskRewardTime = sConfigMgr->GetOption<int32>("Playerbots.MinGuildTaskRewardTime", 300);
-    MaxGuildTaskRewardTime = sConfigMgr->GetOption<int32>("Playerbots.MaxGuildTaskRewardTime", 3600);
-    GuildTaskAdvertCleanupTime = sConfigMgr->GetOption<int32>("Playerbots.GuildTaskAdvertCleanupTime", 300);
-    GuildTaskKillTaskDistance = sConfigMgr->GetOption<int32>("Playerbots.GuildTaskKillTaskDistance", 2000);
-    TargetPosRecalcDistance = sConfigMgr->GetOption<float>("Playerbots.TargetPosRecalcDistance", 0.1f);
+    GuildTaskEnabled = sConfigMgr->GetOption<bool>("Cortex.Bots.EnableGuildTasks", false);
+    MinGuildTaskChangeTime = sConfigMgr->GetOption<int32>("Cortex.Bots.MinGuildTaskChangeTime", 3 * 24 * 3600);
+    MaxGuildTaskChangeTime = sConfigMgr->GetOption<int32>("Cortex.Bots.MaxGuildTaskChangeTime", 4 * 24 * 3600);
+    MinGuildTaskAdvertisementTime = sConfigMgr->GetOption<int32>("Cortex.Bots.MinGuildTaskAdvertisementTime", 300);
+    MaxGuildTaskAdvertisementTime = sConfigMgr->GetOption<int32>("Cortex.Bots.MaxGuildTaskAdvertisementTime", 12 * 3600);
+    MinGuildTaskRewardTime = sConfigMgr->GetOption<int32>("Cortex.Bots.MinGuildTaskRewardTime", 300);
+    MaxGuildTaskRewardTime = sConfigMgr->GetOption<int32>("Cortex.Bots.MaxGuildTaskRewardTime", 3600);
+    GuildTaskAdvertCleanupTime = sConfigMgr->GetOption<int32>("Cortex.Bots.GuildTaskAdvertCleanupTime", 300);
+    GuildTaskKillTaskDistance = sConfigMgr->GetOption<int32>("Cortex.Bots.GuildTaskKillTaskDistance", 2000);
+    TargetPosRecalcDistance = sConfigMgr->GetOption<float>("Cortex.Bots.TargetPosRecalcDistance", 0.1f);
 
     //cosmetics
-    switch (sConfigMgr->GetOption<int32>("Playerbots.RandomBotShowHelmet", 1))
+    switch (sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotShowHelmet", 1))
     {
         case 0:
             RandomBotShowHelmet = ShowHideCosmetic::ALWAYS_HIDE;
@@ -626,7 +626,7 @@ bool PlayerbotAIConfig::Initialize()
             RandomBotShowHelmet = ShowHideCosmetic::ALWAYS_SHOW;
             break;
     }
-    switch (sConfigMgr->GetOption<int32>("Playerbots.RandomBotShowCloak", 1))
+    switch (sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotShowCloak", 1))
     {
         case 0:
             RandomBotShowCloak = ShowHideCosmetic::ALWAYS_HIDE;
@@ -641,163 +641,163 @@ bool PlayerbotAIConfig::Initialize()
     }
 
     // SPP switches
-    EnableGreet = sConfigMgr->GetOption<bool>("Playerbots.EnableGreet", true);
-    SummonWhenGroup = sConfigMgr->GetOption<bool>("Playerbots.SummonWhenGroup", true);
-    RandomBotFixedLevel = sConfigMgr->GetOption<bool>("Playerbots.RandomBotFixedLevel", false);
-    DisableRandomLevels = sConfigMgr->GetOption<bool>("Playerbots.DisableRandomLevels", false);
-    RandomBotFreshStart = sConfigMgr->GetOption<bool>("Playerbots.RandomBotFreshStart", false);
-    RandomBotRandomPassword = sConfigMgr->GetOption<bool>("Playerbots.RandomBotRandomPassword", true);
-    DowngradeMaxLevelBot = sConfigMgr->GetOption<bool>("Playerbots.DowngradeMaxLevelBot", true);
-    EquipAndSpecPersistence = sConfigMgr->GetOption<bool>("Playerbots.EquipAndSpecPersistence", true);
-    EquipAndSpecPersistenceLevel = sConfigMgr->GetOption<int32>("Playerbots.EquipAndSpecPersistenceLevel", 1);
-    GroupInvitationPermission = sConfigMgr->GetOption<int32>("Playerbots.GroupInvitationPermission", 1);
-    AllowBattlegroundCommands = sConfigMgr->GetOption<bool>("Playerbots.AllowBattlegroundCommands", false);
-    KeepAltsInGroup = sConfigMgr->GetOption<bool>("Playerbots.KeepAltsInGroup", false);
-    AllowSummonInCombat = sConfigMgr->GetOption<bool>("Playerbots.AllowSummonInCombat", true);
-    AllowSummonWhenMasterIsDead = sConfigMgr->GetOption<bool>("Playerbots.AllowSummonWhenMasterIsDead", true);
-    AllowSummonWhenBotIsDead = sConfigMgr->GetOption<bool>("Playerbots.AllowSummonWhenBotIsDead", true);
-    ReviveBotWhenSummoned = sConfigMgr->GetOption<int32>("Playerbots.ReviveBotWhenSummoned", 1);
-    BotRepairWhenSummon = sConfigMgr->GetOption<bool>("Playerbots.BotRepairWhenSummon", true);
-    AutoInitOnly = sConfigMgr->GetOption<bool>("Playerbots.AutoInitOnly", false);
-    ResetInstanceIdForAltBots = sConfigMgr->GetOption<bool>("Playerbots.ResetInstanceIdForAltBots", false);
-    AutoInitEquipLevelLimitRatio = sConfigMgr->GetOption<float>("Playerbots.AutoInitEquipLevelLimitRatio", 1.0);
+    EnableGreet = sConfigMgr->GetOption<bool>("Cortex.Bots.EnableGreet", true);
+    SummonWhenGroup = sConfigMgr->GetOption<bool>("Cortex.Bots.SummonWhenGroup", true);
+    RandomBotFixedLevel = sConfigMgr->GetOption<bool>("Cortex.Bots.RandomBotFixedLevel", false);
+    DisableRandomLevels = sConfigMgr->GetOption<bool>("Cortex.Bots.DisableRandomLevels", false);
+    RandomBotFreshStart = sConfigMgr->GetOption<bool>("Cortex.Bots.RandomBotFreshStart", false);
+    RandomBotRandomPassword = sConfigMgr->GetOption<bool>("Cortex.Bots.RandomBotRandomPassword", true);
+    DowngradeMaxLevelBot = sConfigMgr->GetOption<bool>("Cortex.Bots.DowngradeMaxLevelBot", true);
+    EquipAndSpecPersistence = sConfigMgr->GetOption<bool>("Cortex.Bots.EquipAndSpecPersistence", true);
+    EquipAndSpecPersistenceLevel = sConfigMgr->GetOption<int32>("Cortex.Bots.EquipAndSpecPersistenceLevel", 1);
+    GroupInvitationPermission = sConfigMgr->GetOption<int32>("Cortex.Bots.GroupInvitationPermission", 1);
+    AllowBattlegroundCommands = sConfigMgr->GetOption<bool>("Cortex.Bots.AllowBattlegroundCommands", false);
+    KeepAltsInGroup = sConfigMgr->GetOption<bool>("Cortex.Bots.KeepAltsInGroup", false);
+    AllowSummonInCombat = sConfigMgr->GetOption<bool>("Cortex.Bots.AllowSummonInCombat", true);
+    AllowSummonWhenMasterIsDead = sConfigMgr->GetOption<bool>("Cortex.Bots.AllowSummonWhenMasterIsDead", true);
+    AllowSummonWhenBotIsDead = sConfigMgr->GetOption<bool>("Cortex.Bots.AllowSummonWhenBotIsDead", true);
+    ReviveBotWhenSummoned = sConfigMgr->GetOption<int32>("Cortex.Bots.ReviveBotWhenSummoned", 1);
+    BotRepairWhenSummon = sConfigMgr->GetOption<bool>("Cortex.Bots.BotRepairWhenSummon", true);
+    AutoInitOnly = sConfigMgr->GetOption<bool>("Cortex.Bots.AutoInitOnly", false);
+    ResetInstanceIdForAltBots = sConfigMgr->GetOption<bool>("Cortex.Bots.ResetInstanceIdForAltBots", false);
+    AutoInitEquipLevelLimitRatio = sConfigMgr->GetOption<float>("Cortex.Bots.AutoInitEquipLevelLimitRatio", 1.0);
 
-    MaxAddedBots = sConfigMgr->GetOption<int32>("Playerbots.MaxAddedBots", 40);
-    AddClassCommand = sConfigMgr->GetOption<int32>("Playerbots.AddClassCommand", 1);
-    AddClassAccountPoolSize = sConfigMgr->GetOption<int32>("Playerbots.AddClassAccountPoolSize", 50);
-    AddClassRandomCharacter = sConfigMgr->GetOption<bool>("Playerbots.AddClassRandomCharacter", false);
-    MaintenanceCommand = sConfigMgr->GetOption<int32>("Playerbots.MaintenanceCommand", 1);
+    MaxAddedBots = sConfigMgr->GetOption<int32>("Cortex.Bots.MaxAddedBots", 40);
+    AddClassCommand = sConfigMgr->GetOption<int32>("Cortex.Bots.AddClassCommand", 1);
+    AddClassAccountPoolSize = sConfigMgr->GetOption<int32>("Cortex.Bots.AddClassAccountPoolSize", 50);
+    AddClassRandomCharacter = sConfigMgr->GetOption<bool>("Cortex.Bots.AddClassRandomCharacter", false);
+    MaintenanceCommand = sConfigMgr->GetOption<int32>("Cortex.Bots.MaintenanceCommand", 1);
 
-    AltMaintenanceAttunementQs = sConfigMgr->GetOption<bool>("Playerbots.AltMaintenanceAttunementQuests", true);
-    AltMaintenanceBags = sConfigMgr->GetOption<bool>("Playerbots.AltMaintenanceBags", true);
-    AltMaintenanceAmmo = sConfigMgr->GetOption<bool>("Playerbots.AltMaintenanceAmmo", true);
-    AltMaintenanceFood = sConfigMgr->GetOption<bool>("Playerbots.AltMaintenanceFood", true);
-    AltMaintenanceReagents = sConfigMgr->GetOption<bool>("Playerbots.AltMaintenanceReagents", true);
-    AltMaintenanceConsumables = sConfigMgr->GetOption<bool>("Playerbots.AltMaintenanceConsumables", true);
-    AltMaintenancePotions = sConfigMgr->GetOption<bool>("Playerbots.AltMaintenancePotions", true);
-    AltMaintenanceTalentTree = sConfigMgr->GetOption<bool>("Playerbots.AltMaintenanceTalentTree", true);
-    AltMaintenancePet = sConfigMgr->GetOption<bool>("Playerbots.AltMaintenancePet", true);
-    AltMaintenancePetTalents = sConfigMgr->GetOption<bool>("Playerbots.AltMaintenancePetTalents", true);
-    AltMaintenanceClassSpells = sConfigMgr->GetOption<bool>("Playerbots.AltMaintenanceClassSpells", true);
-    AltMaintenanceAvailableSpells = sConfigMgr->GetOption<bool>("Playerbots.AltMaintenanceAvailableSpells", true);
-    AltMaintenanceSkills = sConfigMgr->GetOption<bool>("Playerbots.AltMaintenanceSkills", true);
-    AltMaintenanceReputation = sConfigMgr->GetOption<bool>("Playerbots.AltMaintenanceReputation", true);
-    AltMaintenanceSpecialSpells = sConfigMgr->GetOption<bool>("Playerbots.AltMaintenanceSpecialSpells", true);
-    AltMaintenanceMounts = sConfigMgr->GetOption<bool>("Playerbots.AltMaintenanceMounts", true);
-    AltMaintenanceGlyphs = sConfigMgr->GetOption<bool>("Playerbots.AltMaintenanceGlyphs", true);
-    AltMaintenanceKeyring = sConfigMgr->GetOption<bool>("Playerbots.AltMaintenanceKeyring", true);
-    AltMaintenanceGemsEnchants = sConfigMgr->GetOption<bool>("Playerbots.AltMaintenanceGemsEnchants", true);
+    AltMaintenanceAttunementQs = sConfigMgr->GetOption<bool>("Cortex.Bots.AltMaintenanceAttunementQuests", true);
+    AltMaintenanceBags = sConfigMgr->GetOption<bool>("Cortex.Bots.AltMaintenanceBags", true);
+    AltMaintenanceAmmo = sConfigMgr->GetOption<bool>("Cortex.Bots.AltMaintenanceAmmo", true);
+    AltMaintenanceFood = sConfigMgr->GetOption<bool>("Cortex.Bots.AltMaintenanceFood", true);
+    AltMaintenanceReagents = sConfigMgr->GetOption<bool>("Cortex.Bots.AltMaintenanceReagents", true);
+    AltMaintenanceConsumables = sConfigMgr->GetOption<bool>("Cortex.Bots.AltMaintenanceConsumables", true);
+    AltMaintenancePotions = sConfigMgr->GetOption<bool>("Cortex.Bots.AltMaintenancePotions", true);
+    AltMaintenanceTalentTree = sConfigMgr->GetOption<bool>("Cortex.Bots.AltMaintenanceTalentTree", true);
+    AltMaintenancePet = sConfigMgr->GetOption<bool>("Cortex.Bots.AltMaintenancePet", true);
+    AltMaintenancePetTalents = sConfigMgr->GetOption<bool>("Cortex.Bots.AltMaintenancePetTalents", true);
+    AltMaintenanceClassSpells = sConfigMgr->GetOption<bool>("Cortex.Bots.AltMaintenanceClassSpells", true);
+    AltMaintenanceAvailableSpells = sConfigMgr->GetOption<bool>("Cortex.Bots.AltMaintenanceAvailableSpells", true);
+    AltMaintenanceSkills = sConfigMgr->GetOption<bool>("Cortex.Bots.AltMaintenanceSkills", true);
+    AltMaintenanceReputation = sConfigMgr->GetOption<bool>("Cortex.Bots.AltMaintenanceReputation", true);
+    AltMaintenanceSpecialSpells = sConfigMgr->GetOption<bool>("Cortex.Bots.AltMaintenanceSpecialSpells", true);
+    AltMaintenanceMounts = sConfigMgr->GetOption<bool>("Cortex.Bots.AltMaintenanceMounts", true);
+    AltMaintenanceGlyphs = sConfigMgr->GetOption<bool>("Cortex.Bots.AltMaintenanceGlyphs", true);
+    AltMaintenanceKeyring = sConfigMgr->GetOption<bool>("Cortex.Bots.AltMaintenanceKeyring", true);
+    AltMaintenanceGemsEnchants = sConfigMgr->GetOption<bool>("Cortex.Bots.AltMaintenanceGemsEnchants", true);
 
-    AutoGearCommand = sConfigMgr->GetOption<int32>("Playerbots.AutoGearCommand", 1);
-    AutoGearCommandAltBots = sConfigMgr->GetOption<int32>("Playerbots.AutoGearCommandAltBots", 1);
-    AutoGearBisCommand = sConfigMgr->GetOption<int32>("Playerbots.AutoGearBisCommand", 0);
-    AutoGearQualityLimit = sConfigMgr->GetOption<int32>("Playerbots.AutoGearQualityLimit", 3);
-    AutoGearScoreLimit = sConfigMgr->GetOption<int32>("Playerbots.AutoGearScoreLimit", 0);
+    AutoGearCommand = sConfigMgr->GetOption<int32>("Cortex.Bots.AutoGearCommand", 1);
+    AutoGearCommandAltBots = sConfigMgr->GetOption<int32>("Cortex.Bots.AutoGearCommandAltBots", 1);
+    AutoGearBisCommand = sConfigMgr->GetOption<int32>("Cortex.Bots.AutoGearBisCommand", 0);
+    AutoGearQualityLimit = sConfigMgr->GetOption<int32>("Cortex.Bots.AutoGearQualityLimit", 3);
+    AutoGearScoreLimit = sConfigMgr->GetOption<int32>("Cortex.Bots.AutoGearScoreLimit", 0);
 
-    RandomBotXPRate = sConfigMgr->GetOption<float>("Playerbots.RandomBotXPRate", 1.0);
-    RandomBotAllianceRatio = sConfigMgr->GetOption<int32>("Playerbots.RandomBotAllianceRatio", 50);
-    RandomBotHordeRatio = sConfigMgr->GetOption<int32>("Playerbots.RandomBotHordeRatio", 50);
-    DisableDeathKnightLogin = sConfigMgr->GetOption<bool>("Playerbots.DisableDeathKnightLogin", 0);
-    LimitTalentsExpansion = sConfigMgr->GetOption<bool>("Playerbots.LimitTalentsExpansion", 0);
-    BotActiveAlone = sConfigMgr->GetOption<int32>("Playerbots.BotActiveAlone", 10);
-    BotActiveAloneDurationSeconds = sConfigMgr->GetOption<int32>("Playerbots.BotActiveAloneDurationSeconds", 30);
-    BotActiveAloneForceWhenInRadius = sConfigMgr->GetOption<uint32>("Playerbots.BotActiveAloneForceWhenInRadius", 150);
-    BotActiveAloneForceWhenInZone = sConfigMgr->GetOption<bool>("Playerbots.BotActiveAloneForceWhenInZone", 1);
-    BotActiveAloneForceWhenInMap = sConfigMgr->GetOption<bool>("Playerbots.BotActiveAloneForceWhenInMap", 0);
-    BotActiveAloneForceWhenIsFriend = sConfigMgr->GetOption<bool>("Playerbots.BotActiveAloneForceWhenIsFriend", 0);
-    BotActiveAloneForceWhenInGuild = sConfigMgr->GetOption<bool>("Playerbots.BotActiveAloneForceWhenInGuild", 1);
-    BotActiveAloneSmartScale = sConfigMgr->GetOption<bool>("Playerbots.botActiveAloneSmartScale", 1);
-    BotActiveAloneSmartScaleDiffLimitFloor = sConfigMgr->GetOption<uint32>("Playerbots.botActiveAloneSmartScaleDiffLimitfloor", 50);
-    BotActiveAloneSmartScaleDiffLimitCeiling = sConfigMgr->GetOption<uint32>("Playerbots.botActiveAloneSmartScaleDiffLimitCeiling", 200);
-    BotActiveAloneSmartScaleWhenMinLevel = sConfigMgr->GetOption<uint32>("Playerbots.botActiveAloneSmartScaleWhenMinLevel", 1);
-    BotActiveAloneSmartScaleWhenMaxLevel = sConfigMgr->GetOption<uint32>("Playerbots.botActiveAloneSmartScaleWhenMaxLevel", 80);
+    RandomBotXPRate = sConfigMgr->GetOption<float>("Cortex.Bots.RandomBotXPRate", 1.0);
+    RandomBotAllianceRatio = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotAllianceRatio", 50);
+    RandomBotHordeRatio = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotHordeRatio", 50);
+    DisableDeathKnightLogin = sConfigMgr->GetOption<bool>("Cortex.Bots.DisableDeathKnightLogin", 0);
+    LimitTalentsExpansion = sConfigMgr->GetOption<bool>("Cortex.Bots.LimitTalentsExpansion", 0);
+    BotActiveAlone = sConfigMgr->GetOption<int32>("Cortex.Bots.BotActiveAlone", 10);
+    BotActiveAloneDurationSeconds = sConfigMgr->GetOption<int32>("Cortex.Bots.BotActiveAloneDurationSeconds", 30);
+    BotActiveAloneForceWhenInRadius = sConfigMgr->GetOption<uint32>("Cortex.Bots.BotActiveAloneForceWhenInRadius", 150);
+    BotActiveAloneForceWhenInZone = sConfigMgr->GetOption<bool>("Cortex.Bots.BotActiveAloneForceWhenInZone", 1);
+    BotActiveAloneForceWhenInMap = sConfigMgr->GetOption<bool>("Cortex.Bots.BotActiveAloneForceWhenInMap", 0);
+    BotActiveAloneForceWhenIsFriend = sConfigMgr->GetOption<bool>("Cortex.Bots.BotActiveAloneForceWhenIsFriend", 0);
+    BotActiveAloneForceWhenInGuild = sConfigMgr->GetOption<bool>("Cortex.Bots.BotActiveAloneForceWhenInGuild", 1);
+    BotActiveAloneSmartScale = sConfigMgr->GetOption<bool>("Cortex.Bots.botActiveAloneSmartScale", 1);
+    BotActiveAloneSmartScaleDiffLimitFloor = sConfigMgr->GetOption<uint32>("Cortex.Bots.botActiveAloneSmartScaleDiffLimitfloor", 50);
+    BotActiveAloneSmartScaleDiffLimitCeiling = sConfigMgr->GetOption<uint32>("Cortex.Bots.botActiveAloneSmartScaleDiffLimitCeiling", 200);
+    BotActiveAloneSmartScaleWhenMinLevel = sConfigMgr->GetOption<uint32>("Cortex.Bots.botActiveAloneSmartScaleWhenMinLevel", 1);
+    BotActiveAloneSmartScaleWhenMaxLevel = sConfigMgr->GetOption<uint32>("Cortex.Bots.botActiveAloneSmartScaleWhenMaxLevel", 80);
 
-    RandomBotsWalkingRPG = sConfigMgr->GetOption<bool>("Playerbots.RandombotsWalkingRPG", false);
-    RandomBotsWalkingRPGInDoors = sConfigMgr->GetOption<bool>("Playerbots.RandombotsWalkingRPG.InDoors", false);
-    MinEnchantingBotLevel = sConfigMgr->GetOption<int32>("Playerbots.MinEnchantingBotLevel", 60);
-    LimitEnchantExpansion = sConfigMgr->GetOption<int32>("Playerbots.LimitEnchantExpansion", 1);
-    LimitGearExpansion = sConfigMgr->GetOption<int32>("Playerbots.LimitGearExpansion", 1);
-    RandomBotStartingLevel = sConfigMgr->GetOption<int32>("Playerbots.RandombotStartingLevel", 1);
-    EnablePeriodicOnlineOffline = sConfigMgr->GetOption<bool>("Playerbots.EnablePeriodicOnlineOffline", false);
-    EnableRandomBotTrading = sConfigMgr->GetOption<int32>("Playerbots.EnableRandomBotTrading", 1);
-    PeriodicOnlineOfflineRatio = sConfigMgr->GetOption<float>("Playerbots.PeriodicOnlineOfflineRatio", 2.0);
-    GearScoreCheck = sConfigMgr->GetOption<bool>("Playerbots.GearScoreCheck", false);
-    RandomBotPreQuests = sConfigMgr->GetOption<bool>("Playerbots.PreQuests", false);
+    RandomBotsWalkingRPG = sConfigMgr->GetOption<bool>("Cortex.Bots.RandombotsWalkingRPG", false);
+    RandomBotsWalkingRPGInDoors = sConfigMgr->GetOption<bool>("Cortex.Bots.RandombotsWalkingRPG.InDoors", false);
+    MinEnchantingBotLevel = sConfigMgr->GetOption<int32>("Cortex.Bots.MinEnchantingBotLevel", 60);
+    LimitEnchantExpansion = sConfigMgr->GetOption<int32>("Cortex.Bots.LimitEnchantExpansion", 1);
+    LimitGearExpansion = sConfigMgr->GetOption<int32>("Cortex.Bots.LimitGearExpansion", 1);
+    RandomBotStartingLevel = sConfigMgr->GetOption<int32>("Cortex.Bots.RandombotStartingLevel", 1);
+    EnablePeriodicOnlineOffline = sConfigMgr->GetOption<bool>("Cortex.Bots.EnablePeriodicOnlineOffline", false);
+    EnableRandomBotTrading = sConfigMgr->GetOption<int32>("Cortex.Bots.EnableRandomBotTrading", 1);
+    PeriodicOnlineOfflineRatio = sConfigMgr->GetOption<float>("Cortex.Bots.PeriodicOnlineOfflineRatio", 2.0);
+    GearScoreCheck = sConfigMgr->GetOption<bool>("Cortex.Bots.GearScoreCheck", false);
+    RandomBotPreQuests = sConfigMgr->GetOption<bool>("Cortex.Bots.PreQuests", false);
 
     // SPP automation
-    FreeMethodLoot = sConfigMgr->GetOption<bool>("Playerbots.FreeMethodLoot", false);
-    LootNeedRollLevel = sConfigMgr->GetOption<int32>("Playerbots.LootNeedRollLevel", 1);
-    LootRollRecipe = sConfigMgr->GetOption<bool>("Playerbots.LootRollRecipe", false);
-    LootRollDisenchant = sConfigMgr->GetOption<bool>("Playerbots.LootRollDisenchant", false);
-    LootGreedRollLevel = sConfigMgr->GetOption<bool>("Playerbots.LootGreedRollLevel", false);
-    AutoPickReward = sConfigMgr->GetOption<std::string>("Playerbots.AutoPickReward", "yes");
-    AutoEquipUpgradeLoot = sConfigMgr->GetOption<bool>("Playerbots.AutoEquipUpgradeLoot", true);
-    EquipUpgradeThreshold = sConfigMgr->GetOption<float>("Playerbots.EquipUpgradeThreshold", 1.1f);
-    TwoRoundsGearInit = sConfigMgr->GetOption<bool>("Playerbots.TwoRoundsGearInit", false);
-    SyncQuestWithPlayer = sConfigMgr->GetOption<bool>("Playerbots.SyncQuestWithPlayer", true);
-    SyncQuestForPlayer = sConfigMgr->GetOption<bool>("Playerbots.SyncQuestForPlayer", false);
-    DropObsoleteQuests = sConfigMgr->GetOption<bool>("Playerbots.DropObsoleteQuests", true);
-    AllowLearnTrainerSpells = sConfigMgr->GetOption<bool>("Playerbots.AllowLearnTrainerSpells", true);
-    AutoPickTalents = sConfigMgr->GetOption<bool>("Playerbots.AutoPickTalents", true);
-    AutoUpgradeEquip = sConfigMgr->GetOption<bool>("Playerbots.AutoUpgradeEquip", true);
-    HunterWolfPet = sConfigMgr->GetOption<int32>("Playerbots.HunterWolfPet", 0);
-    DefaultPetStance = sConfigMgr->GetOption<int32>("Playerbots.DefaultPetStance", 1);
-    PetChatCommandDebug = sConfigMgr->GetOption<bool>("Playerbots.PetChatCommandDebug", 0);
-    AutoLearnTrainerSpells = sConfigMgr->GetOption<bool>("Playerbots.AutoLearnTrainerSpells", true);
-    AutoLearnQuestSpells = sConfigMgr->GetOption<bool>("Playerbots.AutoLearnQuestSpells", true);
-    AutoTeleportForLevel = sConfigMgr->GetOption<bool>("Playerbots.AutoTeleportForLevel", false);
-    AutoDoQuests = sConfigMgr->GetOption<bool>("Playerbots.AutoDoQuests", true);
-    EnableNewRpgStrategy = sConfigMgr->GetOption<bool>("Playerbots.EnableNewRpgStrategy", true);
-    NewRpgQuestCare = sConfigMgr->GetOption<bool>("Playerbots.NewRpgQuestCare", false);
-    NewRpgQuestMaxLevelAbove = sConfigMgr->GetOption<uint32>("Playerbots.NewRpgQuestMaxLevelAbove", 1);
-    NewRpgQuestMaxDeaths = std::max<uint32>(1, sConfigMgr->GetOption<uint32>("Playerbots.NewRpgQuestMaxDeaths", 2));
+    FreeMethodLoot = sConfigMgr->GetOption<bool>("Cortex.Bots.FreeMethodLoot", false);
+    LootNeedRollLevel = sConfigMgr->GetOption<int32>("Cortex.Bots.LootNeedRollLevel", 1);
+    LootRollRecipe = sConfigMgr->GetOption<bool>("Cortex.Bots.LootRollRecipe", false);
+    LootRollDisenchant = sConfigMgr->GetOption<bool>("Cortex.Bots.LootRollDisenchant", false);
+    LootGreedRollLevel = sConfigMgr->GetOption<bool>("Cortex.Bots.LootGreedRollLevel", false);
+    AutoPickReward = sConfigMgr->GetOption<std::string>("Cortex.Bots.AutoPickReward", "yes");
+    AutoEquipUpgradeLoot = sConfigMgr->GetOption<bool>("Cortex.Bots.AutoEquipUpgradeLoot", true);
+    EquipUpgradeThreshold = sConfigMgr->GetOption<float>("Cortex.Bots.EquipUpgradeThreshold", 1.1f);
+    TwoRoundsGearInit = sConfigMgr->GetOption<bool>("Cortex.Bots.TwoRoundsGearInit", false);
+    SyncQuestWithPlayer = sConfigMgr->GetOption<bool>("Cortex.Bots.SyncQuestWithPlayer", true);
+    SyncQuestForPlayer = sConfigMgr->GetOption<bool>("Cortex.Bots.SyncQuestForPlayer", false);
+    DropObsoleteQuests = sConfigMgr->GetOption<bool>("Cortex.Bots.DropObsoleteQuests", true);
+    AllowLearnTrainerSpells = sConfigMgr->GetOption<bool>("Cortex.Bots.AllowLearnTrainerSpells", true);
+    AutoPickTalents = sConfigMgr->GetOption<bool>("Cortex.Bots.AutoPickTalents", true);
+    AutoUpgradeEquip = sConfigMgr->GetOption<bool>("Cortex.Bots.AutoUpgradeEquip", true);
+    HunterWolfPet = sConfigMgr->GetOption<int32>("Cortex.Bots.HunterWolfPet", 0);
+    DefaultPetStance = sConfigMgr->GetOption<int32>("Cortex.Bots.DefaultPetStance", 1);
+    PetChatCommandDebug = sConfigMgr->GetOption<bool>("Cortex.Bots.PetChatCommandDebug", 0);
+    AutoLearnTrainerSpells = sConfigMgr->GetOption<bool>("Cortex.Bots.AutoLearnTrainerSpells", true);
+    AutoLearnQuestSpells = sConfigMgr->GetOption<bool>("Cortex.Bots.AutoLearnQuestSpells", true);
+    AutoTeleportForLevel = sConfigMgr->GetOption<bool>("Cortex.Bots.AutoTeleportForLevel", false);
+    AutoDoQuests = sConfigMgr->GetOption<bool>("Cortex.Bots.AutoDoQuests", true);
+    EnableNewRpgStrategy = sConfigMgr->GetOption<bool>("Cortex.Bots.EnableNewRpgStrategy", true);
+    NewRpgQuestCare = sConfigMgr->GetOption<bool>("Cortex.Bots.NewRpgQuestCare", false);
+    NewRpgQuestMaxLevelAbove = sConfigMgr->GetOption<uint32>("Cortex.Bots.NewRpgQuestMaxLevelAbove", 1);
+    NewRpgQuestMaxDeaths = std::max<uint32>(1, sConfigMgr->GetOption<uint32>("Cortex.Bots.NewRpgQuestMaxDeaths", 2));
     NewRpgQuestNoProgressSeconds =
-        std::max<uint32>(60, sConfigMgr->GetOption<uint32>("Playerbots.NewRpgQuestNoProgressSeconds", 240));
-    NewRpgQuestRevisitLevels = sConfigMgr->GetOption<uint32>("Playerbots.NewRpgQuestRevisitLevels", 2);
-    NewRpgQuestRevisitMinutes = sConfigMgr->GetOption<uint32>("Playerbots.NewRpgQuestRevisitMinutes", 45);
-    NewRpgRecover = sConfigMgr->GetOption<bool>("Playerbots.NewRpgRecover", false);
+        std::max<uint32>(60, sConfigMgr->GetOption<uint32>("Cortex.Bots.NewRpgQuestNoProgressSeconds", 240));
+    NewRpgQuestRevisitLevels = sConfigMgr->GetOption<uint32>("Cortex.Bots.NewRpgQuestRevisitLevels", 2);
+    NewRpgQuestRevisitMinutes = sConfigMgr->GetOption<uint32>("Cortex.Bots.NewRpgQuestRevisitMinutes", 45);
+    NewRpgRecover = sConfigMgr->GetOption<bool>("Cortex.Bots.NewRpgRecover", false);
     NewRpgRecoverHealthPct =
-        std::min<uint32>(95, sConfigMgr->GetOption<uint32>("Playerbots.NewRpgRecoverHealthPct", 60));
-    NewRpgRecoverManaPct = std::min<uint32>(95, sConfigMgr->GetOption<uint32>("Playerbots.NewRpgRecoverManaPct", 40));
-    NewRpgRecoverMaxSeconds = sConfigMgr->GetOption<uint32>("Playerbots.NewRpgRecoverMaxSeconds", 150);
-    NewRpgCrossZone = sConfigMgr->GetOption<bool>("Playerbots.NewRpgCrossZone", false);
-    NewRpgWalkUnstick = sConfigMgr->GetOption<bool>("Playerbots.NewRpgWalkUnstick", false);
-    NewRpgUnreachableMinutes = sConfigMgr->GetOption<uint32>("Playerbots.NewRpgUnreachableMinutes", 30);
-    NewRpgUpkeep = sConfigMgr->GetOption<bool>("Playerbots.NewRpgUpkeep", false);
-    NewRpgUpkeepBagPct = std::min<uint32>(100, sConfigMgr->GetOption<uint32>("Playerbots.NewRpgUpkeepBagPct", 80));
+        std::min<uint32>(95, sConfigMgr->GetOption<uint32>("Cortex.Bots.NewRpgRecoverHealthPct", 60));
+    NewRpgRecoverManaPct = std::min<uint32>(95, sConfigMgr->GetOption<uint32>("Cortex.Bots.NewRpgRecoverManaPct", 40));
+    NewRpgRecoverMaxSeconds = sConfigMgr->GetOption<uint32>("Cortex.Bots.NewRpgRecoverMaxSeconds", 150);
+    NewRpgCrossZone = sConfigMgr->GetOption<bool>("Cortex.Bots.NewRpgCrossZone", false);
+    NewRpgWalkUnstick = sConfigMgr->GetOption<bool>("Cortex.Bots.NewRpgWalkUnstick", false);
+    NewRpgUnreachableMinutes = sConfigMgr->GetOption<uint32>("Cortex.Bots.NewRpgUnreachableMinutes", 30);
+    NewRpgUpkeep = sConfigMgr->GetOption<bool>("Cortex.Bots.NewRpgUpkeep", false);
+    NewRpgUpkeepBagPct = std::min<uint32>(100, sConfigMgr->GetOption<uint32>("Cortex.Bots.NewRpgUpkeepBagPct", 80));
     NewRpgUpkeepDurabilityPct =
-        std::min<uint32>(100, sConfigMgr->GetOption<uint32>("Playerbots.NewRpgUpkeepDurabilityPct", 50));
-    NewRpgUpkeepBuy = sConfigMgr->GetOption<bool>("Playerbots.NewRpgUpkeepBuy", true);
-    NewRpgGearCheckSeconds = sConfigMgr->GetOption<uint32>("Playerbots.NewRpgGearCheckSeconds", 0);
-    OffRoleStatPenalty = sConfigMgr->GetOption<bool>("Playerbots.OffRoleStatPenalty", true);
-    NewRpgQuestTidy = sConfigMgr->GetOption<bool>("Playerbots.NewRpgQuestTidy", false);
+        std::min<uint32>(100, sConfigMgr->GetOption<uint32>("Cortex.Bots.NewRpgUpkeepDurabilityPct", 50));
+    NewRpgUpkeepBuy = sConfigMgr->GetOption<bool>("Cortex.Bots.NewRpgUpkeepBuy", true);
+    NewRpgGearCheckSeconds = sConfigMgr->GetOption<uint32>("Cortex.Bots.NewRpgGearCheckSeconds", 0);
+    OffRoleStatPenalty = sConfigMgr->GetOption<bool>("Cortex.Bots.OffRoleStatPenalty", true);
+    NewRpgQuestTidy = sConfigMgr->GetOption<bool>("Cortex.Bots.NewRpgQuestTidy", false);
     BotProfessions::LoadConfig();
     BotTelemetry::LoadConfig();
 
-    RpgStatusProbWeight[RPG_WANDER_RANDOM] = sConfigMgr->GetOption<int32>("Playerbots.RpgStatusProbWeight.WanderRandom", 15);
-    RpgStatusProbWeight[RPG_WANDER_NPC] = sConfigMgr->GetOption<int32>("Playerbots.RpgStatusProbWeight.WanderNpc", 20);
-    RpgStatusProbWeight[RPG_GO_GRIND] = sConfigMgr->GetOption<int32>("Playerbots.RpgStatusProbWeight.GoGrind", 15);
-    RpgStatusProbWeight[RPG_GO_CAMP] = sConfigMgr->GetOption<int32>("Playerbots.RpgStatusProbWeight.GoCamp", 10);
-    RpgStatusProbWeight[RPG_DO_QUEST] = sConfigMgr->GetOption<int32>("Playerbots.RpgStatusProbWeight.DoQuest", 60);
-    RpgStatusProbWeight[RPG_TRAVEL_FLIGHT] = sConfigMgr->GetOption<int32>("Playerbots.RpgStatusProbWeight.TravelFlight", 15);
-    RpgStatusProbWeight[RPG_REST] = sConfigMgr->GetOption<int32>("Playerbots.RpgStatusProbWeight.Rest", 5);
-    RpgStatusProbWeight[RPG_OUTDOOR_PVP] = sConfigMgr->GetOption<int32>("Playerbots.RpgStatusProbWeight.OutdoorPvp", 10);
-    RpgStatusProbWeight[RPG_DO_GATHER] = sConfigMgr->GetOption<int32>("Playerbots.RpgStatusProbWeight.DoGather", 15);
+    RpgStatusProbWeight[RPG_WANDER_RANDOM] = sConfigMgr->GetOption<int32>("Cortex.Bots.RpgStatusProbWeight.WanderRandom", 15);
+    RpgStatusProbWeight[RPG_WANDER_NPC] = sConfigMgr->GetOption<int32>("Cortex.Bots.RpgStatusProbWeight.WanderNpc", 20);
+    RpgStatusProbWeight[RPG_GO_GRIND] = sConfigMgr->GetOption<int32>("Cortex.Bots.RpgStatusProbWeight.GoGrind", 15);
+    RpgStatusProbWeight[RPG_GO_CAMP] = sConfigMgr->GetOption<int32>("Cortex.Bots.RpgStatusProbWeight.GoCamp", 10);
+    RpgStatusProbWeight[RPG_DO_QUEST] = sConfigMgr->GetOption<int32>("Cortex.Bots.RpgStatusProbWeight.DoQuest", 60);
+    RpgStatusProbWeight[RPG_TRAVEL_FLIGHT] = sConfigMgr->GetOption<int32>("Cortex.Bots.RpgStatusProbWeight.TravelFlight", 15);
+    RpgStatusProbWeight[RPG_REST] = sConfigMgr->GetOption<int32>("Cortex.Bots.RpgStatusProbWeight.Rest", 5);
+    RpgStatusProbWeight[RPG_OUTDOOR_PVP] = sConfigMgr->GetOption<int32>("Cortex.Bots.RpgStatusProbWeight.OutdoorPvp", 10);
+    RpgStatusProbWeight[RPG_DO_GATHER] = sConfigMgr->GetOption<int32>("Cortex.Bots.RpgStatusProbWeight.DoGather", 15);
 
-    SyncLevelWithPlayers = sConfigMgr->GetOption<bool>("Playerbots.SyncLevelWithPlayers", false);
+    SyncLevelWithPlayers = sConfigMgr->GetOption<bool>("Cortex.Bots.SyncLevelWithPlayers", false);
     RandomBotConcentrateInPlayerZone =
-        sConfigMgr->GetOption<bool>("Playerbots.RandomBotConcentrateInPlayerZone", false);
-    RandomBotGroupNearby = sConfigMgr->GetOption<bool>("Playerbots.RandomBotGroupNearby", false);
+        sConfigMgr->GetOption<bool>("Cortex.Bots.RandomBotConcentrateInPlayerZone", false);
+    RandomBotGroupNearby = sConfigMgr->GetOption<bool>("Cortex.Bots.RandomBotGroupNearby", false);
 
     // arena
-    RandomBotArenaTeam2v2Count = sConfigMgr->GetOption<int32>("Playerbots.RandomBotArenaTeam2v2Count", 10);
-    RandomBotArenaTeam3v3Count = sConfigMgr->GetOption<int32>("Playerbots.RandomBotArenaTeam3v3Count", 10);
-    RandomBotArenaTeam5v5Count = sConfigMgr->GetOption<int32>("Playerbots.RandomBotArenaTeam5v5Count", 5);
-    DeleteRandomBotArenaTeams = sConfigMgr->GetOption<bool>("Playerbots.DeleteRandomBotArenaTeams", false);
-    RandomBotArenaTeamMaxRating = sConfigMgr->GetOption<int32>("Playerbots.RandomBotArenaTeamMaxRating", 2000);
-    RandomBotArenaTeamMinRating = sConfigMgr->GetOption<int32>("Playerbots.RandomBotArenaTeamMinRating", 1000);
+    RandomBotArenaTeam2v2Count = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotArenaTeam2v2Count", 10);
+    RandomBotArenaTeam3v3Count = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotArenaTeam3v3Count", 10);
+    RandomBotArenaTeam5v5Count = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotArenaTeam5v5Count", 5);
+    DeleteRandomBotArenaTeams = sConfigMgr->GetOption<bool>("Cortex.Bots.DeleteRandomBotArenaTeams", false);
+    RandomBotArenaTeamMaxRating = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotArenaTeamMaxRating", 2000);
+    RandomBotArenaTeamMinRating = sConfigMgr->GetOption<int32>("Cortex.Bots.RandomBotArenaTeamMinRating", 1000);
 
-    SelfBotLevel = sConfigMgr->GetOption<int32>("Playerbots.SelfBotLevel", 1);
+    SelfBotLevel = sConfigMgr->GetOption<int32>("Cortex.Bots.SelfBotLevel", 1);
 
     RandomPlayerbotFactory::CreateRandomBots();
     if (World::IsStopped())
@@ -832,7 +832,7 @@ bool PlayerbotAIConfig::Initialize()
     sTravelMgr.Init();
 
     ExcludedHunterPetFamilies.clear();
-    LoadList<std::vector<uint32>>(sConfigMgr->GetOption<std::string>("Playerbots.ExcludedHunterPetFamilies", ""), ExcludedHunterPetFamilies);
+    LoadList<std::vector<uint32>>(sConfigMgr->GetOption<std::string>("Cortex.Bots.ExcludedHunterPetFamilies", ""), ExcludedHunterPetFamilies);
 
     LOG_INFO("server.loading", "---------------------------------------");
     LOG_INFO("server.loading", "       mod-playerbots initialized      ");
@@ -841,7 +841,7 @@ bool PlayerbotAIConfig::Initialize()
     return true;
 }
 
-// Loads Playerbots.LevelBrackets.* and Playerbots.ResetBotLevel.* (see RandomBotLevelMgr). Also
+// Loads Cortex.Bots.LevelBrackets.* and Cortex.Bots.ResetBotLevel.* (see RandomBotLevelMgr). Also
 // re-run on ".reload config" via RandomBotLevelWorldScript::OnAfterConfigLoad. Bracket
 // bounds/percentages are only the as-configured values here; RandomBotLevelMgr::LoadConfig()
 // copies them into its own working state, since dynamic distribution and clamp/rebalance mutate
@@ -849,29 +849,29 @@ bool PlayerbotAIConfig::Initialize()
 void PlayerbotAIConfig::LoadRandomBotLevelConfig()
 {
     // ---- Level brackets ----
-    LevelBracketsEnabled = sConfigMgr->GetOption<bool>("Playerbots.LevelBrackets.Enabled", false);
+    LevelBracketsEnabled = sConfigMgr->GetOption<bool>("Cortex.Bots.LevelBrackets.Enabled", false);
     LevelBracketsIgnoreGuildWithRealPlayers =
-        sConfigMgr->GetOption<bool>("Playerbots.LevelBrackets.IgnoreGuildBotsWithRealPlayers", true);
+        sConfigMgr->GetOption<bool>("Cortex.Bots.LevelBrackets.IgnoreGuildBotsWithRealPlayers", true);
     LevelBracketsIgnoreArenaTeamBots =
-        sConfigMgr->GetOption<bool>("Playerbots.LevelBrackets.IgnoreArenaTeamBots", true);
+        sConfigMgr->GetOption<bool>("Cortex.Bots.LevelBrackets.IgnoreArenaTeamBots", true);
 
-    LevelBracketsCheckFrequency = sConfigMgr->GetOption<uint32>("Playerbots.LevelBrackets.CheckFrequency", 300);
+    LevelBracketsCheckFrequency = sConfigMgr->GetOption<uint32>("Cortex.Bots.LevelBrackets.CheckFrequency", 300);
     LevelBracketsFlaggedCheckFrequency =
-        sConfigMgr->GetOption<uint32>("Playerbots.LevelBrackets.CheckFlaggedFrequency", 15);
+        sConfigMgr->GetOption<uint32>("Cortex.Bots.LevelBrackets.CheckFlaggedFrequency", 15);
     LevelBracketsDynamicDistribution =
-        sConfigMgr->GetOption<bool>("Playerbots.LevelBrackets.Dynamic.UseDynamicDistribution", false);
+        sConfigMgr->GetOption<bool>("Cortex.Bots.LevelBrackets.Dynamic.UseDynamicDistribution", false);
     LevelBracketsRealPlayerWeight =
-        sConfigMgr->GetOption<float>("Playerbots.LevelBrackets.Dynamic.RealPlayerWeight", 1.0f);
-    LevelBracketsSyncFactions = sConfigMgr->GetOption<bool>("Playerbots.LevelBrackets.Dynamic.SyncFactions", false);
-    LevelBracketsIgnoreFriendListed = sConfigMgr->GetOption<bool>("Playerbots.LevelBrackets.IgnoreFriendListed", true);
+        sConfigMgr->GetOption<float>("Cortex.Bots.LevelBrackets.Dynamic.RealPlayerWeight", 1.0f);
+    LevelBracketsSyncFactions = sConfigMgr->GetOption<bool>("Cortex.Bots.LevelBrackets.Dynamic.SyncFactions", false);
+    LevelBracketsIgnoreFriendListed = sConfigMgr->GetOption<bool>("Cortex.Bots.LevelBrackets.IgnoreFriendListed", true);
     LevelBracketsFlaggedProcessLimit =
-        sConfigMgr->GetOption<uint32>("Playerbots.LevelBrackets.FlaggedProcessLimit", 5);
+        sConfigMgr->GetOption<uint32>("Cortex.Bots.LevelBrackets.FlaggedProcessLimit", 5);
 
-    ParseLevelMgrExcludeNames(sConfigMgr->GetOption<std::string>("Playerbots.LevelBrackets.ExcludeNames", ""),
+    ParseLevelMgrExcludeNames(sConfigMgr->GetOption<std::string>("Cortex.Bots.LevelBrackets.ExcludeNames", ""),
         LevelBracketsExcludeNames);
 
     LevelBracketsNumRanges =
-        static_cast<uint8>(sConfigMgr->GetOption<uint32>("Playerbots.LevelBrackets.NumRanges", 9));
+        static_cast<uint8>(sConfigMgr->GetOption<uint32>("Cortex.Bots.LevelBrackets.NumRanges", 9));
     LevelBracketsAlliance.resize(LevelBracketsNumRanges);
     LevelBracketsHorde.resize(LevelBracketsNumRanges);
 
@@ -881,11 +881,11 @@ void PlayerbotAIConfig::LoadRandomBotLevelConfig()
         uint32 defaultLower = (i == 0 ? 1 : i * 10);
         uint32 defaultUpper = (i < LevelBracketsNumRanges - 1 ? i * 10 + 9 : RandomBotMaxLevel);
         LevelBracketsAlliance[i].Lower = static_cast<uint8>(
-            sConfigMgr->GetOption<uint32>("Playerbots.LevelBrackets.Alliance.Range" + idx + ".Lower", defaultLower));
+            sConfigMgr->GetOption<uint32>("Cortex.Bots.LevelBrackets.Alliance.Range" + idx + ".Lower", defaultLower));
         LevelBracketsAlliance[i].Upper = static_cast<uint8>(
-            sConfigMgr->GetOption<uint32>("Playerbots.LevelBrackets.Alliance.Range" + idx + ".Upper", defaultUpper));
+            sConfigMgr->GetOption<uint32>("Cortex.Bots.LevelBrackets.Alliance.Range" + idx + ".Upper", defaultUpper));
         LevelBracketsAlliance[i].Pct = static_cast<uint8>(
-            sConfigMgr->GetOption<uint32>("Playerbots.LevelBrackets.Alliance.Range" + idx + ".Pct", 11));
+            sConfigMgr->GetOption<uint32>("Cortex.Bots.LevelBrackets.Alliance.Range" + idx + ".Pct", 11));
     }
 
     for (uint8 i = 0; i < LevelBracketsNumRanges; ++i)
@@ -894,11 +894,11 @@ void PlayerbotAIConfig::LoadRandomBotLevelConfig()
         uint32 defaultLower = (i == 0 ? 1 : i * 10);
         uint32 defaultUpper = (i < LevelBracketsNumRanges - 1 ? i * 10 + 9 : RandomBotMaxLevel);
         LevelBracketsHorde[i].Lower = static_cast<uint8>(
-            sConfigMgr->GetOption<uint32>("Playerbots.LevelBrackets.Horde.Range" + idx + ".Lower", defaultLower));
+            sConfigMgr->GetOption<uint32>("Cortex.Bots.LevelBrackets.Horde.Range" + idx + ".Lower", defaultLower));
         LevelBracketsHorde[i].Upper = static_cast<uint8>(
-            sConfigMgr->GetOption<uint32>("Playerbots.LevelBrackets.Horde.Range" + idx + ".Upper", defaultUpper));
+            sConfigMgr->GetOption<uint32>("Cortex.Bots.LevelBrackets.Horde.Range" + idx + ".Upper", defaultUpper));
         LevelBracketsHorde[i].Pct = static_cast<uint8>(
-            sConfigMgr->GetOption<uint32>("Playerbots.LevelBrackets.Horde.Range" + idx + ".Pct", 11));
+            sConfigMgr->GetOption<uint32>("Cortex.Bots.LevelBrackets.Horde.Range" + idx + ".Pct", 11));
     }
 
     // A mismatch forcibly disables SyncFactions and logs an error; it never brings the server down.
@@ -922,71 +922,71 @@ void PlayerbotAIConfig::LoadRandomBotLevelConfig()
     }
 
     // ---- Level reset ----
-    ResetBotLevelEnabled = sConfigMgr->GetOption<bool>("Playerbots.ResetBotLevel.Enabled", false);
+    ResetBotLevelEnabled = sConfigMgr->GetOption<bool>("Cortex.Bots.ResetBotLevel.Enabled", false);
 
     ResetBotLevelMaxLevel =
-        static_cast<uint8>(sConfigMgr->GetOption<uint32>("Playerbots.ResetBotLevel.MaxLevel", 80));
+        static_cast<uint8>(sConfigMgr->GetOption<uint32>("Cortex.Bots.ResetBotLevel.MaxLevel", 80));
     if ((ResetBotLevelMaxLevel < 2 || ResetBotLevelMaxLevel > 80) && ResetBotLevelMaxLevel != 0)
     {
         LOG_ERROR("server.loading",
-            "[RandomBotLevelMgr] Invalid Playerbots.ResetBotLevel.MaxLevel value: {}. Using default value 80.",
+            "[RandomBotLevelMgr] Invalid Cortex.Bots.ResetBotLevel.MaxLevel value: {}. Using default value 80.",
             ResetBotLevelMaxLevel);
         ResetBotLevelMaxLevel = 80;
     }
 
     ResetBotLevelResetTo =
-        static_cast<uint8>(sConfigMgr->GetOption<uint32>("Playerbots.ResetBotLevel.ResetToLevel", 1));
+        static_cast<uint8>(sConfigMgr->GetOption<uint32>("Cortex.Bots.ResetBotLevel.ResetToLevel", 1));
     if (ResetBotLevelResetTo < 1 || (ResetBotLevelMaxLevel > 0 && ResetBotLevelResetTo >= ResetBotLevelMaxLevel))
     {
         LOG_ERROR("server.loading",
-            "[RandomBotLevelMgr] Invalid Playerbots.ResetBotLevel.ResetToLevel value: {}. Using default value 1.",
+            "[RandomBotLevelMgr] Invalid Cortex.Bots.ResetBotLevel.ResetToLevel value: {}. Using default value 1.",
             ResetBotLevelResetTo);
         ResetBotLevelResetTo = 1;
     }
 
     ResetBotLevelSkipFrom =
-        static_cast<uint8>(sConfigMgr->GetOption<uint32>("Playerbots.ResetBotLevel.SkipFromLevel", 0));
+        static_cast<uint8>(sConfigMgr->GetOption<uint32>("Cortex.Bots.ResetBotLevel.SkipFromLevel", 0));
     if (ResetBotLevelSkipFrom > 80 || (ResetBotLevelMaxLevel > 0 && ResetBotLevelSkipFrom >= ResetBotLevelMaxLevel))
     {
         LOG_ERROR("server.loading",
-            "[RandomBotLevelMgr] Invalid Playerbots.ResetBotLevel.SkipFromLevel value: {}. Using default value 0 "
+            "[RandomBotLevelMgr] Invalid Cortex.Bots.ResetBotLevel.SkipFromLevel value: {}. Using default value 0 "
             "(disabled).",
             ResetBotLevelSkipFrom);
         ResetBotLevelSkipFrom = 0;
     }
 
-    ResetBotLevelSkipTo = static_cast<uint8>(sConfigMgr->GetOption<uint32>("Playerbots.ResetBotLevel.SkipToLevel", 1));
+    ResetBotLevelSkipTo = static_cast<uint8>(sConfigMgr->GetOption<uint32>("Cortex.Bots.ResetBotLevel.SkipToLevel", 1));
     if (ResetBotLevelSkipTo < 1 || ResetBotLevelSkipTo > 80 ||
         (ResetBotLevelMaxLevel > 0 && ResetBotLevelSkipTo > ResetBotLevelMaxLevel))
     {
         LOG_ERROR("server.loading",
-            "[RandomBotLevelMgr] Invalid Playerbots.ResetBotLevel.SkipToLevel value: {}. Using default value 1.",
+            "[RandomBotLevelMgr] Invalid Cortex.Bots.ResetBotLevel.SkipToLevel value: {}. Using default value 1.",
             ResetBotLevelSkipTo);
         ResetBotLevelSkipTo = 1;
     }
 
     ResetBotLevelChance =
-        static_cast<uint8>(sConfigMgr->GetOption<uint32>("Playerbots.ResetBotLevel.ResetChance", 100));
+        static_cast<uint8>(sConfigMgr->GetOption<uint32>("Cortex.Bots.ResetBotLevel.ResetChance", 100));
     if (ResetBotLevelChance > 100)
     {
         LOG_ERROR("server.loading",
-            "[RandomBotLevelMgr] Invalid Playerbots.ResetBotLevel.ResetChance value: {}. Using default value 100.",
+            "[RandomBotLevelMgr] Invalid Cortex.Bots.ResetBotLevel.ResetChance value: {}. Using default value 100.",
             ResetBotLevelChance);
         ResetBotLevelChance = 100;
     }
 
-    ResetBotLevelScaledChance = sConfigMgr->GetOption<bool>("Playerbots.ResetBotLevel.ScaledChance", false);
+    ResetBotLevelScaledChance = sConfigMgr->GetOption<bool>("Cortex.Bots.ResetBotLevel.ScaledChance", false);
 
     ResetBotLevelRestrictTimePlayed =
-        sConfigMgr->GetOption<bool>("Playerbots.ResetBotLevel.RestrictTimePlayed", false);
-    ResetBotLevelMinTimePlayed = sConfigMgr->GetOption<uint32>("Playerbots.ResetBotLevel.MinTimePlayed", 86400);
+        sConfigMgr->GetOption<bool>("Cortex.Bots.ResetBotLevel.RestrictTimePlayed", false);
+    ResetBotLevelMinTimePlayed = sConfigMgr->GetOption<uint32>("Cortex.Bots.ResetBotLevel.MinTimePlayed", 86400);
     ResetBotLevelPlayedTimeCheckFrequency =
-        sConfigMgr->GetOption<uint32>("Playerbots.ResetBotLevel.PlayedTimeCheckFrequency", 864);
+        sConfigMgr->GetOption<uint32>("Cortex.Bots.ResetBotLevel.PlayedTimeCheckFrequency", 864);
 
     ResetBotLevelIgnoreGuildWithRealPlayers =
-        sConfigMgr->GetOption<bool>("Playerbots.ResetBotLevel.IgnoreGuildBotsWithRealPlayers", false);
+        sConfigMgr->GetOption<bool>("Cortex.Bots.ResetBotLevel.IgnoreGuildBotsWithRealPlayers", false);
 
-    ParseLevelMgrExcludeNames(sConfigMgr->GetOption<std::string>("Playerbots.ResetBotLevel.ExcludeNames", ""),
+    ParseLevelMgrExcludeNames(sConfigMgr->GetOption<std::string>("Cortex.Bots.ResetBotLevel.ExcludeNames", ""),
         ResetBotLevelExcludeNames);
 }
 
@@ -1097,7 +1097,7 @@ void PlayerbotAIConfig::Log(std::string const fileName, char const* str, ...)
 
 void PlayerbotAIConfig::LoadWorldBuff()
 {
-    std::string matrix = sConfigMgr->GetOption<std::string>("Playerbots.WorldBuffMatrix", "", true);
+    std::string matrix = sConfigMgr->GetOption<std::string>("Cortex.Bots.WorldBuffMatrix", "", true);
     if (matrix.empty())
         return;
 

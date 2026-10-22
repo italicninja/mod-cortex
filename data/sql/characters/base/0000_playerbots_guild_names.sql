@@ -1,11 +1,11 @@
-DROP TABLE IF EXISTS `playerbots_guild_names`;
-CREATE TABLE `playerbots_guild_names` (
+DROP TABLE IF EXISTS `cortex_guild_names`;
+CREATE TABLE `cortex_guild_names` (
                                           `name_id` INT(11) NOT NULL AUTO_INCREMENT UNIQUE,
                                           `name` varchar(24) NOT NULL UNIQUE,
                                           PRIMARY KEY (`name_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Playerbot guild names';
 
-INSERT INTO `playerbots_guild_names` VALUES
+INSERT INTO `cortex_guild_names` VALUES
 (NULL, 'Black Guard'),
 (NULL, 'White Guard'),
 (NULL, 'Amber Guard'),

@@ -97,7 +97,7 @@ namespace
     // One way across something walking can't. Ends are where a player stands: the pier next to the berth, the
     // landing in front of the lift, the trigger. Coordinates from the world DB (gameobject spawns of the lifts,
     // areatrigger / areatrigger_teleport, spell_target_position, creatures and objects standing on the piers) and
-    // playerbots_travelnode (the transport stops and the walkable path ends next to them), 2026-10-18.
+    // cortex_travelnode (the transport stops and the walkable path ends next to them), 2026-10-18.
     struct Link
     {
         char const* name;
@@ -170,7 +170,7 @@ namespace
          {1, -1001.3f, -3825.0f, 6.0f, 0.0f}, {0, -14280.1f, 569.2f, 7.1f, 0.0f}, false, 0.0f, 0.0f, 360.0f},
         // Added 2026-10-18. Berths are the stops of the transport's TaxiPathNode path (delay 60 s, the ferry's 30 s);
         // the pier ends are where players stand next to them: the zeppelin master or dockmaster on that platform or
-        // pier, or a walkable point 8-14 yd from the berth (playerbots_travelnode_path, bot telemetry) as for the
+        // pier, or a walkable point 8-14 yd from the berth (cortex_travelnode_path, bot telemetry) as for the
         // links above.
         {"Iron Eagle (Orgrimmar - Grom'gol)", CortexLegKind::BOAT, 175080, TEAM_BIT_HORDE,
          {1, 1354.6f, -4636.0f, 54.3f, 0.0f}, {0, -12441.3f, 215.0f, 31.3f, 0.0f}, false, 0.0f, 0.0f, 420.0f},

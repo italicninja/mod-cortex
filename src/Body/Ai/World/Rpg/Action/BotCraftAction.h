@@ -15,7 +15,7 @@
 
 class SpellInfo;
 
-// Crafting for skill (Playerbots.Professions, docs/professions.md): every few minutes a random bot with a crafting
+// Crafting for skill (Cortex.Bots.Professions, docs/professions.md): every few minutes a random bot with a crafting
 // profession looks for a recipe that can still raise its skill and that it has the materials, tools and, for an
 // anvil or forge, the focus for. If there is one it stops and crafts until nothing is left to make, as a player
 // does between quests. Before crafting, enchanters disenchant gear they have no use for and scribes mill herbs, so

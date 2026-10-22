@@ -15,7 +15,7 @@ struct Spot;
 struct TripState;
 }  // namespace BotAuction
 
-// Auction house trip (Playerbots.NewRpgAuction, see BotAuction.h): with loot worth listing, auction mail waiting or
+// Auction house trip (Cortex.Bots.NewRpgAuction, see BotAuction.h): with loot worth listing, auction mail waiting or
 // money to spend, walk to the nearest usable auctioneer, collect mail, sell and buy, collect what was bought.
 class NewRpgAuctionAction : public NewRpgBaseAction
 {

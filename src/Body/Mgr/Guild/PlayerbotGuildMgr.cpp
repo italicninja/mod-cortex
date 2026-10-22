@@ -146,18 +146,18 @@ void PlayerbotGuildMgr::ResetGuildCache()
 
 void PlayerbotGuildMgr::LoadGuildNames()
 {
-    LOG_INFO("playerbots", "Loading guild names from playerbots_guild_names...");
+    LOG_INFO("playerbots", "Loading guild names from cortex_guild_names...");
 
     _guildNames.clear();
     _shuffled_guild_keys.clear();
 
     QueryResult result = CharacterDatabase.Query(
-        "SELECT {} FROM playerbots_guild_names",
+        "SELECT {} FROM cortex_guild_names",
         RandomPlayerbotFactory::GetLocalizedNameSelector("name"));
 
     if (!result)
     {
-        LOG_ERROR("playerbots", "No entries found in playerbots_guild_names. List is empty.");
+        LOG_ERROR("playerbots", "No entries found in cortex_guild_names. List is empty.");
         return;
     }
 
@@ -177,7 +177,7 @@ void PlayerbotGuildMgr::LoadGuildNames()
     std::mt19937 g(rd());
 
     std::shuffle(_shuffled_guild_keys.begin(), _shuffled_guild_keys.end(), g);
-    LOG_INFO("playerbots", "Loaded {} guild entries from playerbots_guild_names table.", _guildNames.size());
+    LOG_INFO("playerbots", "Loaded {} guild entries from cortex_guild_names table.", _guildNames.size());
 }
 
 void PlayerbotGuildMgr::ValidateGuildCache()

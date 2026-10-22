@@ -90,7 +90,7 @@ public:
         if (usage != ITEM_USAGE_VENDOR && usage != ITEM_USAGE_AH)
             return true;
 
-        // Kept for the next auction house trip (Playerbots.NewRpgAuction)
+        // Kept for the next auction house trip (Cortex.Bots.NewRpgAuction)
         if (usage == ITEM_USAGE_AH && BotAuction::HoldForAuction(botAI, item))
             return true;
 

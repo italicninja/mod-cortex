@@ -1035,7 +1035,7 @@ bool NewRpgUpkeepAction::NeedsSelling()
     return AI_VALUE(uint8, "bag space") >= sPlayerbotAIConfig.NewRpgUpkeepBagPct && AI_VALUE(bool, "can sell");
 }
 
-static uint32 MinAmmo() { return sConfigMgr->GetOption<uint32>("Playerbots.NewRpgUpkeepAmmo", 200); }
+static uint32 MinAmmo() { return sConfigMgr->GetOption<uint32>("Cortex.Bots.NewRpgUpkeepAmmo", 200); }
 
 static bool SellsAmmo(Creature* vendor, uint32 ammoSubclass, uint8 level)
 {

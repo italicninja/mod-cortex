@@ -38,7 +38,8 @@ namespace
 // Called by the core's module loader (Add<module name with '-' as '_'>Scripts).
 void Addmod_cortexScripts()
 {
-    AddCortexBodyScripts();
+    // Cortex before its body: its OnShutdown saves memory before the body logs the bots out.
     AddCortexScripts();
+    AddCortexBodyScripts();
     new CortexLoginScript();
 }

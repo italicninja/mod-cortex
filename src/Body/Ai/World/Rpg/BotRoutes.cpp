@@ -201,7 +201,7 @@ float Dist(float ax, float ay, float az, float bx, float by, float bz)
 
 float Dist(Point const& a, Point const& b) { return Dist(a.x, a.y, a.z, b.x, b.y, b.z); }
 
-// Hand-made links (Playerbots.NewRpgRouteLinks) for ways down that neither the precomputed links nor a closest-pair
+// Hand-made links (Cortex.Bots.NewRpgRouteLinks) for ways down that neither the precomputed links nor a closest-pair
 // bridge get right: "map:x,y,z;x,y,z;...|map:..." Each chain is attached to the nearest node (within LINK_ATTACH yards)
 // at both ends and walked point by point, both ways, at its real length.
 constexpr float LINK_ATTACH = 300.0f;
@@ -283,7 +283,7 @@ uint32 AddLinks(std::unordered_map<uint32, MapGraph>& graphs, std::string const&
     return added;
 }
 
-// Roads (Playerbots.NewRpgRoadsFile, made by tools/roads/roads.py from the client's road textures): polylines
+// Roads (Cortex.Bots.NewRpgRoadsFile, made by tools/roads/roads.py from the client's road textures): polylines
 // "<map> x y z x y z ...". Their ends and junctions become nodes; road edges cost ROAD_FACTOR of their length so
 // routes take roads where they can; each road node is joined to its ROAD_ATTACH_NODES nearest travel nodes within
 // ROAD_ATTACH yards, and road ends to another road's node within ROAD_GAP yards (texture gaps at bridges, gates).
@@ -648,7 +648,7 @@ void Load()
     std::unordered_map<uint32, NodeRef> byId;
     std::unordered_map<uint32, MapGraph> loading;
 
-    if (QueryResult result = PlayerbotsDatabase.Query("SELECT id, map_id, x, y, z FROM playerbots_travelnode"))
+    if (QueryResult result = PlayerbotsDatabase.Query("SELECT id, map_id, x, y, z FROM cortex_travelnode"))
     {
         do
         {
@@ -671,7 +671,7 @@ void Load()
     std::unordered_map<uint64, Link> links;
 
     if (QueryResult result = PlayerbotsDatabase.Query(
-            "SELECT node_id, to_node_id, distance, swim_distance, extra_cost FROM playerbots_travelnode_link "
+            "SELECT node_id, to_node_id, distance, swim_distance, extra_cost FROM cortex_travelnode_link "
             "WHERE type = 1 AND calculated = 1"))
     {
         do
@@ -690,7 +690,7 @@ void Load()
 
     // Points arrive ordered by link, then nr (the primary key), so each link's points are contiguous.
     if (QueryResult result = PlayerbotsDatabase.Query(
-            "SELECT node_id, to_node_id, x, y, z FROM playerbots_travelnode_path ORDER BY node_id, to_node_id, nr"))
+            "SELECT node_id, to_node_id, x, y, z FROM cortex_travelnode_path ORDER BY node_id, to_node_id, nr"))
     {
         uint64 current = 0;
         Link* link = nullptr;
@@ -738,8 +738,8 @@ void Load()
     }
 
     // Roads and hand-made links first, so the pieces they join don't also get a closest-pair bridge
-    AddRoads(loading, sConfigMgr->GetOption<std::string>("Playerbots.NewRpgRoadsFile", ""));
-    uint32 bridges = AddLinks(loading, sConfigMgr->GetOption<std::string>("Playerbots.NewRpgRouteLinks", ""));
+    AddRoads(loading, sConfigMgr->GetOption<std::string>("Cortex.Bots.NewRpgRoadsFile", ""));
+    uint32 bridges = AddLinks(loading, sConfigMgr->GetOption<std::string>("Cortex.Bots.NewRpgRouteLinks", ""));
     for (auto& [map, graph] : loading)
         bridges += Bridge(map, graph);
 
@@ -988,8 +988,8 @@ void StartLoading()
     if (started.exchange(true))
         return;
 
-    enabled = sConfigMgr->GetOption<bool>("Playerbots.NewRpgRoutes", false);
-    learnFile = sConfigMgr->GetOption<std::string>("Playerbots.NewRpgLearnFile", "");
+    enabled = sConfigMgr->GetOption<bool>("Cortex.Bots.NewRpgRoutes", false);
+    learnFile = sConfigMgr->GetOption<std::string>("Cortex.Bots.NewRpgLearnFile", "");
     if (!enabled)
         return;
 

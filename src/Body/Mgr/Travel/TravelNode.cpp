@@ -2263,7 +2263,7 @@ void TravelNodeMap::saveNodeStore()
 
 void TravelNodeMap::loadNodeStore()
 {
-    std::string const query = "SELECT id, name, map_id, x, y, z, linked FROM playerbots_travelnode";
+    std::string const query = "SELECT id, name, map_id, x, y, z, linked FROM cortex_travelnode";
 
     std::unordered_map<uint32, TravelNode*> saveNodes;
 

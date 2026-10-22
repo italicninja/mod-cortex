@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS `playerbots_rpg_races`;
-CREATE TABLE `playerbots_rpg_races`
+DROP TABLE IF EXISTS `cortex_rpg_races`;
+CREATE TABLE `cortex_rpg_races`
 (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `entry` int(11),
@@ -10,11 +10,11 @@ CREATE TABLE `playerbots_rpg_races`
   KEY `entry` (`entry`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DELETE FROM `playerbots_rpg_races`;
+DELETE FROM `cortex_rpg_races`;
 
 -- say
 
-INSERT INTO `playerbots_rpg_races` VALUES
+INSERT INTO `cortex_rpg_races` VALUES
 --
 --       DRAENEI
 --

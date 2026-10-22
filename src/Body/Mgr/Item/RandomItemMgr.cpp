@@ -1702,7 +1702,7 @@ bool RandomItemMgr::LoadCacheEquip()
 
     if (!result)
     {
-        LOG_WARN("server.loading", ">> Loaded 0 equipment items. DB table `playerbots_equip_cache` is empty!");
+        LOG_WARN("server.loading", ">> Loaded 0 equipment items. DB table `cortex_equip_cache` is empty!");
         LOG_INFO("server.loading", " ");
         return false;
     }
@@ -1740,7 +1740,7 @@ bool RandomItemMgr::LoadCacheRandomItem()
 
     if (!result)
     {
-        LOG_WARN("server.loading", ">> Loaded 0 random items. DB table `playerbots_rnditem_cache` is empty!");
+        LOG_WARN("server.loading", ">> Loaded 0 random items. DB table `cortex_rnditem_cache` is empty!");
         LOG_INFO("server.loading", " ");
         return false;
     }
@@ -1777,7 +1777,7 @@ bool RandomItemMgr::LoadCacheRarity()
 
     if (!result)
     {
-        LOG_WARN("server.loading", ">> Loaded 0 rarity items. DB table `playerbots_rarity_cache` is empty!");
+        LOG_WARN("server.loading", ">> Loaded 0 rarity items. DB table `cortex_rarity_cache` is empty!");
         LOG_INFO("server.loading", " ");
         return false;
     }

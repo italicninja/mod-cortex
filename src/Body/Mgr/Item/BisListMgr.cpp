@@ -19,7 +19,7 @@ void BisListMgr::LoadAll()
     PreparedQueryResult result = PlayerbotsDatabase.Query(stmt);
     if (!result)
     {
-        LOG_INFO("server.loading", "playerbots_bis_gear table missing or empty");
+        LOG_INFO("server.loading", "cortex_bis_gear table missing or empty");
         return;
     }
 

@@ -272,7 +272,7 @@ void CortexTravelAction::LegDone(CortexTrip& trip)
 {
     uint32 now = getMSTime();
     CortexLeg const& leg = trip.legs[trip.leg];
-    // Event names are at most 12 characters (playerbots_telemetry.event); a longer one fails the whole batch.
+    // Event names are at most 12 characters (cortex_telemetry.event); a longer one fails the whole batch.
     BotTelemetry::instance().Event(botAI, "travel_leg", CortexTravel::LegName(leg.kind),
                                    static_cast<int32>(leg.entry),
                                    static_cast<int32>(getMSTimeDiff(trip.legMs, now) / IN_MILLISECONDS),

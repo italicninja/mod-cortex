@@ -36,7 +36,7 @@
 #include "PlayerbotAI.h"
 #include "PlayerbotAIConfig.h"
 #include "PlayerbotTextMgr.h"
-#include "PlayerbotsExtensions.h"
+#include "CortexBody.h"
 #include "Playerbots.h"
 #include "Position.h"
 #include "QuestDef.h"
@@ -59,7 +59,7 @@ constexpr uint32 SPELL_HEARTHSTONE = 8690;
 // while within TRAPPED_RADIUS of where its detour started counts as a dead end (a cave, a hollow) to hearth out of.
 constexpr float TRAPPED_MIN_DISTANCE = 300.0f;
 constexpr float TRAPPED_RADIUS = 100.0f;
-// Travel node routes (Playerbots.NewRpgRoutes) are only worth it past what one mmap path covers.
+// Travel node routes (Cortex.Bots.NewRpgRoutes) are only worth it past what one mmap path covers.
 constexpr float ROUTE_MIN_DISTANCE = 150.0f;
 // Walk unstick: stuck within this many yards (2D) of the destination counts as there.
 constexpr float NEAR_2D = 40.0f;
@@ -105,7 +105,7 @@ bool StuckInPlace(Player* bot)
     return true;
 }
 
-// Steep escapes (Playerbots.NewRpgSteepEscape). Bots path with NAV_GROUND_STEEP left out (core
+// Steep escapes (Cortex.Bots.NewRpgSteepEscape). Bots path with NAV_GROUND_STEEP left out (core
 // PathGenerator::CreateFilter keeps them off 50-60 degree mountainsides), but the extractor tags stairs and some
 // ledges steep too: the spiral stair of Orgrimmar's flight tower is every other poly steep, so a bot a flight sets
 // down on top has no path off it and one at the foot none up to the flight master (336 detours and 104 hearths on
@@ -117,7 +117,7 @@ constexpr float STEEP_ESCAPE_PROGRESS = 5.0f;
 
 bool SteepEscapeEnabled()
 {
-    static bool const enabled = sConfigMgr->GetOption<bool>("Playerbots.NewRpgSteepEscape", true);
+    static bool const enabled = sConfigMgr->GetOption<bool>("Cortex.Bots.NewRpgSteepEscape", true);
     return enabled;
 }
 
@@ -159,7 +159,7 @@ bool NewRpgBaseAction::MoveFarTo(WorldPosition dest)
     if (bot->IsInFlight())
         return true;
 
-    // A quest, grind spot or camp where the bot keeps dying (Playerbots.NewRpgDangerZones): pick something else
+    // A quest, grind spot or camp where the bot keeps dying (Cortex.Bots.NewRpgDangerZones): pick something else
     {
         NewRpgStatus status = botAI->rpgInfo.GetStatus();
         if ((status == RPG_DO_QUEST || status == RPG_GO_GRIND || status == RPG_GO_CAMP) &&
@@ -179,7 +179,7 @@ bool NewRpgBaseAction::MoveFarTo(WorldPosition dest)
         }
     }
 
-    // Another level of the map (Playerbots.NewRpgLevels): across Teldrassil's portals the bot walks to the portal and
+    // Another level of the map (Cortex.Bots.NewRpgLevels): across Teldrassil's portals the bot walks to the portal and
     // steps in (as a client tells the server it walked into the trigger); up a lift it gives up on the place at once
     // instead of walking to the foot of the mesa and hearthing from there.
     if (BotLevels::Enabled())
@@ -575,7 +575,7 @@ bool NewRpgBaseAction::InteractWithNpcOrGameObjectForQuest(ObjectGuid guid)
         QuestStatus const& status = bot->GetQuestStatus(item.QuestId);
         if (status == QUEST_STATUS_NONE && bot->CanTakeQuest(quest, false) && bot->CanAddQuest(quest, false) &&
             IsQuestWorthDoing(quest) && IsQuestCapableDoing(quest) &&
-            PlayerbotsExtensions::AllowsQuest(bot, quest))
+            Cortex::AllowsQuest(bot, quest))
         {
             AcceptQuest(quest, guid);
             if (botAI->GetMaster())
@@ -1072,7 +1072,7 @@ bool NewRpgBaseAction::HasQuestToAcceptOrReward(WorldObject* object)
         QuestStatus const& status = bot->GetQuestStatus(item.QuestId);
         if (status == QUEST_STATUS_NONE && bot->CanTakeQuest(quest, false) && bot->CanAddQuest(quest, false) &&
             IsQuestWorthDoing(quest) && IsQuestCapableDoing(quest) &&
-            PlayerbotsExtensions::AllowsQuest(bot, quest))
+            Cortex::AllowsQuest(bot, quest))
         {
             return true;
         }

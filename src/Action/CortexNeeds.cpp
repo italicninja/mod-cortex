@@ -46,8 +46,8 @@ namespace
     float sTrainerRange = 3000.0f;
     bool sFood = true;
     bool sMail = true;
-    bool sTrainerTrips = false;  // Playerbots.NewRpgTrainer: trainer, profession and inn trips at all
-    uint32 sMinAmmo = 200;       // Playerbots.NewRpgUpkeepAmmo
+    bool sTrainerTrips = false;  // Cortex.Bots.NewRpgTrainer: trainer, profession and inn trips at all
+    uint32 sMinAmmo = 200;       // Cortex.Bots.NewRpgUpkeepAmmo
 
     using Need = CortexNeedsAction::Need;
 
@@ -292,8 +292,8 @@ void CortexNeeds::LoadConfig()
     sTrainerRange = std::clamp(sConfigMgr->GetOption<float>("Cortex.Needs.TrainerRange", 3000.0f), 100.0f, 10000.0f);
     sFood = sConfigMgr->GetOption<bool>("Cortex.Needs.Food", true);
     sMail = sConfigMgr->GetOption<bool>("Cortex.Needs.Mail", true);
-    sTrainerTrips = sConfigMgr->GetOption<bool>("Playerbots.NewRpgTrainer", false);
-    sMinAmmo = sConfigMgr->GetOption<uint32>("Playerbots.NewRpgUpkeepAmmo", 200);
+    sTrainerTrips = sConfigMgr->GetOption<bool>("Cortex.Bots.NewRpgTrainer", false);
+    sMinAmmo = sConfigMgr->GetOption<uint32>("Cortex.Bots.NewRpgUpkeepAmmo", 200);
     LOG_INFO("server.loading", "Cortex: Needs {}, VendorRange {}, TrainerRange {}, Food {}, Mail {}", sEnabled,
              sVendorRange, sTrainerRange, sFood, sMail);
 }

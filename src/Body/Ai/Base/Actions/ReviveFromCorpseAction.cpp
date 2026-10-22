@@ -18,7 +18,7 @@
 #include "GridNotifiers.h"
 #include "GridNotifiersImpl.h"
 #include "PlayerbotAIConfig.h"
-#include "PlayerbotsExtensions.h"
+#include "CortexBody.h"
 #include "BotTelemetry.h"
 #include <algorithm>
 #include <cmath>
@@ -28,7 +28,7 @@
 
 namespace
 {
-// Random bots on their own (Playerbots.NewRpgRecover) don't come back to life with a hostile within SAFE_REVIVE_RANGE:
+// Random bots on their own (Cortex.Bots.NewRpgRecover) don't come back to life with a hostile within SAFE_REVIVE_RANGE:
 // 42% of Loch Modan deaths came within 2 min of a revive (one bot revived at 49% health with 7 hostiles within
 // 25 yd and died 2 s later). They look for a clear spot within reach of the corpse; after SAFE_REVIVE_WAIT seconds
 // dead they take the spirit healer instead.
@@ -63,7 +63,7 @@ bool GoingToHealer(Player* bot, Corpse* corpse)
     return false;
 }
 
-// Corpse runners (PlayerbotsExtensions) look farther: a mob well above them pulls from up to 45 yd. A level 24 revived
+// Corpse runners (Cortex::RunsToCorpse) look farther: a mob well above them pulls from up to 45 yd. A level 24 revived
 // at a Western Plaguelands graveyard with nothing within 25 yd was killed by level 55s 5 s later, 37 times in 21 min.
 // For them a hostile counts within its aggro range of the bot plus AGGRO_MARGIN (and never less than
 // SAFE_REVIVE_RANGE).
@@ -72,7 +72,7 @@ constexpr float AGGRO_MARGIN = 8.0f;
 
 bool HostileNear(Player* bot)
 {
-    bool const corpseRun = PlayerbotsExtensions::RunsToCorpse(bot);
+    bool const corpseRun = Cortex::RunsToCorpse(bot);
     float const scan = corpseRun ? AGGRO_SCAN : SAFE_REVIVE_RANGE;
     std::list<Unit*> units;
     Acore::AnyUnfriendlyUnitInObjectRangeCheck check(bot, bot, scan);
@@ -93,7 +93,7 @@ bool HostileNear(Player* bot)
     return false;
 }
 
-// Corpse runners (PlayerbotsExtensions) also wait out enemy players. On a PvP realm both factions' bots revive at
+// Corpse runners (Cortex::RunsToCorpse) also wait out enemy players. On a PvP realm both factions' bots revive at
 // shared graveyards (Ashenvale 2291,-1731; Stonetalon 900,430) and kill each other there: 60% of player kills of
 // corpse runners on 10-20 came within 2 min of the victim's revive. A ghost doesn't come back while an enemy player
 // is within CAMP_RANGE, at its corpse or at the healer (the random bot manager's 30 min rescue aside).
@@ -119,7 +119,7 @@ std::unordered_map<ObjectGuid::LowType, time_t> campNoted;
 // True when a corpse runner's corpse or healer is camped; the first time per death it writes "corpse_run" "camped".
 bool Camped(PlayerbotAI* botAI, Player* bot, Corpse* corpse)
 {
-    if (!PlayerbotsExtensions::RunsToCorpse(bot) || !EnemyPlayerNear(bot))
+    if (!Cortex::RunsToCorpse(bot) || !EnemyPlayerNear(bot))
         return false;
 
     {
@@ -177,7 +177,7 @@ bool HealerWaitPassed(Player* bot, Corpse* corpse)
 // per death it writes "corpse_run" "healer".
 bool RepeatDeath(PlayerbotAI* botAI, Player* bot, Corpse* corpse)
 {
-    if (!PlayerbotsExtensions::RunsToCorpse(bot))
+    if (!Cortex::RunsToCorpse(bot))
         return false;
 
     uint32 near = 0;
@@ -210,7 +210,7 @@ bool RepeatDeath(PlayerbotAI* botAI, Player* bot, Corpse* corpse)
 }
 }  // namespace
 
-// Top of the default start-zone brackets (Playerbots.ZoneBracket.*).
+// Top of the default start-zone brackets (Cortex.Bots.ZoneBracket.*).
 constexpr uint32 START_ZONE_GRAVEYARD_MAX_LEVEL = 12;
 
 bool ReviveFromCorpseAction::Execute(Event event)
@@ -253,8 +253,8 @@ bool ReviveFromCorpseAction::Execute(Event event)
             return false;
     }
 
-    // Corpse runners (PlayerbotsExtensions) don't take the healer for having died 5 times since their last repair
-    if (!botAI->HasGameClientMaster() && !PlayerbotsExtensions::RunsToCorpse(bot))
+    // Corpse runners (Cortex::RunsToCorpse) don't take the healer for having died 5 times since their last repair
+    if (!botAI->HasGameClientMaster() && !Cortex::RunsToCorpse(bot))
     {
         uint32 dCount = AI_VALUE(uint32, "death count");
 
@@ -310,7 +310,7 @@ bool FindCorpseAction::Execute(Event /*event*/)
     // }
 
     // Corpse runners walk back however often they died: "died 5 times" is no reason to revive and move them
-    bool const corpseRun = PlayerbotsExtensions::RunsToCorpse(bot);
+    bool const corpseRun = Cortex::RunsToCorpse(bot);
     uint32 dCount = corpseRun ? 0 : AI_VALUE(uint32, "death count");
 
     if (!botAI->HasGameClientMaster())
@@ -556,7 +556,7 @@ bool SpiritHealerAction::Execute(Event /*event*/)
 
     // Corpse runners use the nearest graveyard's healer, never one in their start zone
     GraveyardStruct const* ClosestGrave =
-        GetGrave(!PlayerbotsExtensions::RunsToCorpse(bot) &&
+        GetGrave(!Cortex::RunsToCorpse(bot) &&
                  (dCount > 10 || deadTime > 15 * MINUTE || AI_VALUE(uint8, "durability") < 10));
 
     if (ClosestGrave && bot->GetDistance2d(ClosestGrave->x, ClosestGrave->y) < sPlayerbotAIConfig.SightDistance)
@@ -566,7 +566,7 @@ bool SpiritHealerAction::Execute(Event /*event*/)
         // list: "nearest npcs" doesn't always hold it, and a ghost on the graveyard spot then teleported onto that
         // spot every tick (26 ghosts in 19 min stood 30 min at Auberdine, Aldrassil, Kargathia, Charred Vale until
         // the random bot manager's rescue). Before the corpse runs its own 60-300 s revive hid this.
-        if (PlayerbotsExtensions::RunsToCorpse(bot))
+        if (Cortex::RunsToCorpse(bot))
         {
             std::list<Creature*> healers;
             for (uint32 entry : {6491u, 29259u})
@@ -591,7 +591,7 @@ bool SpiritHealerAction::Execute(Event /*event*/)
                 // it came back beside them and died within seconds, over and over (a level 20 at the Hinterlands
                 // graveyard to a level 44 owlbeast every 6 min; 73 bots died 6+ times in one spot in 2 h, 16% of
                 // Cortex deaths, on 2026-10-21). One that waits 30 min gets the random bot manager's rescue.
-                if (PlayerbotsExtensions::RunsToCorpse(bot) && HostileNear(bot))
+                if (Cortex::RunsToCorpse(bot) && HostileNear(bot))
                 {
                     if (HealerWaitPassed(bot, corpse))
                         BotTelemetry::instance().Event(botAI, "corpse_run", "healer_wait",

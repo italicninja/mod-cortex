@@ -1,12 +1,12 @@
-DROP TABLE IF EXISTS `playerbots_names`;
-CREATE TABLE `playerbots_names` (
+DROP TABLE IF EXISTS `cortex_names`;
+CREATE TABLE `cortex_names` (
   `name_id` INT(11) NOT NULL UNIQUE,
   `name` varchar(255) NOT NULL,
   `gender` tinyint(3) unsigned NOT NULL,
 PRIMARY KEY (`name_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Playerbot RandomBot names';
 
-INSERT INTO `playerbots_names` VALUES
+INSERT INTO `cortex_names` VALUES
 (0,'Abennon',0),
 (1,'Abeo',0),
 (2,'Abeor',0),
@@ -100008,6 +100008,6 @@ INSERT INTO `playerbots_names` VALUES
 (99998,'Zyvie',17),
 (99999,'Zywae',17);
 
-DELETE FROM `playerbots_names` WHERE LENGTH(`name`) > 12;
-ALTER TABLE `playerbots_names` MODIFY `name` varchar(12);
-ALTER TABLE `playerbots_names` ADD UNIQUE INDEX name(name, gender);
+DELETE FROM `cortex_names` WHERE LENGTH(`name`) > 12;
+ALTER TABLE `cortex_names` MODIFY `name` varchar(12);
+ALTER TABLE `cortex_names` ADD UNIQUE INDEX name(name, gender);

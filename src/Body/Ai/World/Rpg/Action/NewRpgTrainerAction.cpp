@@ -167,7 +167,7 @@ std::unordered_map<ObjectGuid::LowType, uint16> EventSpawns()
 
 void LoadCatalog()
 {
-    enabled = sConfigMgr->GetOption<bool>("Playerbots.NewRpgTrainer", false);
+    enabled = sConfigMgr->GetOption<bool>("Cortex.Bots.NewRpgTrainer", false);
     if (!enabled)
         return;
 

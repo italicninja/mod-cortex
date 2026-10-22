@@ -203,7 +203,7 @@ std::string const RandomPlayerbotFactory::CreateRandomBotName(NameRaceAndGender 
     {
         QueryResult result = CharacterDatabase.Query(
             "SELECT n.name "
-            "FROM playerbots_names n "
+            "FROM cortex_names n "
             "LEFT OUTER JOIN characters c ON c.name = n.name "
             "WHERE c.guid IS NULL and n.gender = '{}' "
             "ORDER BY RAND() LIMIT 1",
@@ -505,7 +505,7 @@ void RandomPlayerbotFactory::CreateRandomBots()
         LOG_INFO("playerbots", "Deleting all random bot characters and accounts ({} bot accounts found)...", botAccounts.size());
 
         // First execute all the cleanup SQL commands
-        // Clear playerbots_random_bots and playerbots_account_type
+        // Clear cortex_random_bots and cortex_account_type
         PlayerbotsDatabase.DirectExecute(PlayerbotsDatabase.GetPreparedStatement(PLAYERBOTS_DEL_RANDOM_BOTS));
         PlayerbotsDatabase.DirectExecute(PlayerbotsDatabase.GetPreparedStatement(PLAYERBOTS_DEL_ACCOUNT_TYPE));
 
@@ -522,14 +522,14 @@ void RandomPlayerbotFactory::CreateRandomBots()
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(100));    // Extra 100ms fixed delay for safety.
 
-        // Clean up orphaned entries in playerbots_guild_tasks
-        PlayerbotsDatabase.DirectExecute("DELETE FROM playerbots_guild_tasks WHERE owner NOT IN (SELECT guid FROM " + characterDBName + ".characters)");
+        // Clean up orphaned entries in cortex_guild_tasks
+        PlayerbotsDatabase.DirectExecute("DELETE FROM cortex_guild_tasks WHERE owner NOT IN (SELECT guid FROM " + characterDBName + ".characters)");
 
         // Clean up orphaned persona assignments so reused guids roll a fresh persona
-        PlayerbotsDatabase.DirectExecute("DELETE FROM playerbots_persona WHERE guid NOT IN (SELECT guid FROM " + characterDBName + ".characters)");
+        PlayerbotsDatabase.DirectExecute("DELETE FROM cortex_persona WHERE guid NOT IN (SELECT guid FROM " + characterDBName + ".characters)");
 
-        // Clean up orphaned entries in playerbots_db_store (explicit id list, no cross-database subquery)
-        PlayerbotsDatabase.DirectExecute("DELETE FROM playerbots_db_store WHERE guid NOT IN (SELECT guid FROM " + characterDBName + ".characters WHERE account NOT IN (" + botAccountIds + "))");
+        // Clean up orphaned entries in cortex_db_store (explicit id list, no cross-database subquery)
+        PlayerbotsDatabase.DirectExecute("DELETE FROM cortex_db_store WHERE guid NOT IN (SELECT guid FROM " + characterDBName + ".characters WHERE account NOT IN (" + botAccountIds + "))");
 
         // Clean up orphaned records in character-related tables
         CharacterDatabase.Execute("DELETE FROM arena_team_member WHERE guid NOT IN (SELECT guid FROM characters)");
@@ -616,7 +616,7 @@ void RandomPlayerbotFactory::CreateRandomBots()
         PlayerbotsDatabase.DirectExecute("FLUSH TABLES");
 
         LOG_INFO("playerbots", ">> Random bot accounts and data deleted in {} ms", GetMSTimeDiffToNow(timer));
-        LOG_INFO("playerbots", "Please reset the Playerbots.DeleteRandomBotAccounts to 0 and restart the server...");
+        LOG_INFO("playerbots", "Please reset the Cortex.Bots.DeleteRandomBotAccounts to 0 and restart the server...");
         World::StopNow(SHUTDOWN_EXIT_CODE);
         return;
     }
@@ -705,7 +705,7 @@ void RandomPlayerbotFactory::CreateRandomBots()
         {
             nameCached = true;
             LOG_INFO("playerbots", "Creating cache for names per gender and race...");
-            QueryResult result = CharacterDatabase.Query("SELECT name, gender FROM playerbots_names");
+            QueryResult result = CharacterDatabase.Query("SELECT name, gender FROM cortex_names");
             if (!result)
             {
                 LOG_ERROR("playerbots", "No more unused names left");
@@ -791,7 +791,7 @@ std::string const RandomPlayerbotFactory::CreateRandomGuildName()
 {
     std::string guildName = "";
 
-    QueryResult result = CharacterDatabase.Query("SELECT MAX(name_id) FROM playerbots_guild_names");
+    QueryResult result = CharacterDatabase.Query("SELECT MAX(name_id) FROM cortex_guild_names");
     if (!result)
     {
         LOG_ERROR("playerbots", "No more names left for random guilds");
@@ -806,7 +806,7 @@ std::string const RandomPlayerbotFactory::CreateRandomGuildName()
     // Skip names already on an open charter too, or two founders can race for one name.
     // Start at a random id and wrap around, so the last ids being taken doesn't end the list.
     std::string const query =
-        "SELECT {} FROM playerbots_guild_names n "
+        "SELECT {} FROM cortex_guild_names n "
         "LEFT OUTER JOIN guild e ON e.name = {} "
         "LEFT OUTER JOIN petition p ON p.name = {} "
         "WHERE e.guildid IS NULL AND p.ownerguid IS NULL AND n.name_id >= {} ORDER BY n.name_id LIMIT 1";
@@ -866,14 +866,14 @@ void RandomPlayerbotFactory::LoadArenaTeamData()
     // Join on the localized name so already-taken localized names are filtered out
     std::string nameExpr = GetLocalizedNameSelector("n.name");
     QueryResult result = CharacterDatabase.Query(
-        "SELECT {} FROM playerbots_arena_team_names n "
+        "SELECT {} FROM cortex_arena_team_names n "
         "LEFT OUTER JOIN arena_team e ON e.name = {} "
         "WHERE e.arenateamid IS NULL",
         nameExpr, nameExpr);
 
     if (!result)
     {
-        LOG_WARN("playerbots", "No arena team names left in playerbots_arena_team_names");
+        LOG_WARN("playerbots", "No arena team names left in cortex_arena_team_names");
         return;
     }
 

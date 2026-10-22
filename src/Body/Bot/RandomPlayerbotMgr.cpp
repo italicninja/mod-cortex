@@ -33,7 +33,7 @@
 #include "PlayerbotAIConfig.h"
 #include "PlayerbotFactory.h"
 #include "PlayerbotTextMgr.h"
-#include "PlayerbotsExtensions.h"
+#include "CortexBody.h"
 #include "BotTelemetry.h"
 #include "Corpse.h"
 #include "Playerbots.h"
@@ -1560,9 +1560,9 @@ bool RandomPlayerbotMgr::ProcessBot(Player* bot)
     // if death revive
     if (bot->isDead())
     {
-        // Corpse runners (PlayerbotsExtensions) come back through the dead strategy. Only a ghost that got nowhere
+        // Corpse runners (Cortex::RunsToCorpse) come back through the dead strategy. Only a ghost that got nowhere
         // for CORPSE_RUN_RESCUE (no corpse run, no healer) is revived and moved here, counted as "corpse_run".
-        if (PlayerbotsExtensions::RunsToCorpse(bot))
+        if (Cortex::RunsToCorpse(bot))
         {
             // A ghost counts from its release. A body that never became one counts from when it was first seen
             // dead: one that fell off the mountains south of Moonglade into no zone was moved to Westfall dead,

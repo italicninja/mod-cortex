@@ -5,7 +5,6 @@
  */
 
 #include "AiObjectContext.h"
-#include "PlayerbotsExtensions.h"
 #include "Aq20TriggerContext.h"
 #include "BWLTriggerContext.h"
 #include "ChatTriggerContext.h"
@@ -24,7 +23,4 @@ void AiObjectContext::BuildSharedTriggerContexts(
     triggerContexts.Add(new RaidMcTriggerContext());
     triggerContexts.Add(new RaidBwlTriggerContext());
     triggerContexts.Add(new RaidOnyxiaTriggerContext());
-
-    // Other modules' contexts (PlayerbotsExtensions), after the built-in ones.
-    PlayerbotsExtensions::BuildTriggerContexts(triggerContexts);
 }

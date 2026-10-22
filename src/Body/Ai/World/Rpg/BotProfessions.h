@@ -21,19 +21,19 @@ namespace Trainer
     class Trainer;
 }
 
-// Professions for random bots (Playerbots.Professions, docs/professions.md): a gathering + crafting pair chosen by
+// Professions for random bots (Cortex.Bots.Professions, docs/professions.md): a gathering + crafting pair chosen by
 // class fit and by how rare each profession is among the bots, learned and trained at real trainers for real money,
 // levelled by gathering and crafting.
 namespace BotProfessions
 {
     void LoadConfig();
     bool Enabled();
-    // Node detours (Playerbots.Professions.Gather): herbalists and miners leave their path for a node they can
+    // Node detours (Cortex.Bots.Professions.Gather): herbalists and miners leave their path for a node they can
     // gather within GatherRange yards, at most once every GatherCooldown seconds.
     bool Gathering();
     float GatherRange();
     uint32 GatherCooldown();
-    // Resource tracking (Playerbots.Professions.GatherTracking): herbalists and miners keep Find Herbs or Find
+    // Resource tracking (Cortex.Bots.Professions.GatherTracking): herbalists and miners keep Find Herbs or Find
     // Minerals up, and nodes of the tracked kind count as seen without line of sight, out to the visibility range.
     bool GatherTracking();
     // World thread: recounts which professions the online random bots have, every 10 minutes.
@@ -56,10 +56,10 @@ namespace BotProfessions
     // Copper the bot can spend on its professions without touching its reserve; `reservePct` of the reserve kept.
     int64 Spare(Player* bot, uint32 reservePct = 100);
     // Share of the reserve kept when buying a missing tool or the reagents of a recipe that makes one
-    // (Playerbots.Professions.ToolReservePct): a rod or a pick is worth dipping into it.
+    // (Cortex.Bots.Professions.ToolReservePct): a rod or a pick is worth dipping into it.
     uint32 ToolReservePct();
 
-    // Disenchanting and milling (Playerbots.Professions.Disenchant / .Mill): enchanters disenchant green and blue
+    // Disenchanting and milling (Cortex.Bots.Professions.Disenchant / .Mill): enchanters disenchant green and blue
     // gear they have no use for, scribes mill herbs, so their recipes have dust, essence and pigment.
     constexpr uint32 SPELL_DISENCHANT = 13262;
     constexpr uint32 SPELL_MILLING = 51005;

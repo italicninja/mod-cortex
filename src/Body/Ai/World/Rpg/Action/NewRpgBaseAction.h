@@ -63,7 +63,7 @@ protected:
     bool RandomChangeStatus(std::vector<NewRpgStatus> candidateStatus);
     bool CheckRpgStatusAvailable(NewRpgStatus status);
 
-    /* QUEST CARE (Playerbots.NewRpgQuestCare) */
+    /* QUEST CARE (Cortex.Bots.NewRpgQuestCare) */
     // Whether DO_QUEST may pick this quest: not shelved, and not too far above the bot's level.
     bool IsQuestSelectable(uint32 questId);
     // Set a quest aside (shelved with a revisit rule under quest care, permanently otherwise).
@@ -73,7 +73,7 @@ protected:
     // After shelving: go grinding somewhere else, or roll a new status.
     void LeaveQuestToGrind();
 
-    /* QUEST TIDY (Playerbots.NewRpgQuestTidy) */
+    /* QUEST TIDY (Cortex.Bots.NewRpgQuestTidy) */
     // Abandon grey incomplete quests and destroy quest items nothing in the log needs. Returns what changed.
     uint32 TidyQuestLog();
     bool QuestLogNeedsItem(uint32 itemId);
@@ -91,7 +91,7 @@ protected:
     const uint32 stuckTime = 90 * IN_MILLISECONDS;
     // Bots that moved less than this between two stuck checks count as unable to move.
     const float stuckNoMoveDistance = 5.0f;
-    // Walk-based recovery when MoveFarTo makes no progress (Playerbots.NewRpgWalkUnstick).
+    // Walk-based recovery when MoveFarTo makes no progress (Cortex.Bots.NewRpgWalkUnstick).
     bool Unstick(WorldPosition const& dest, float disToDest);
 };
 

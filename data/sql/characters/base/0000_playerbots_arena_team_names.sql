@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS `playerbots_arena_team_names`;
-CREATE TABLE `playerbots_arena_team_names` (
+DROP TABLE IF EXISTS `cortex_arena_team_names`;
+CREATE TABLE `cortex_arena_team_names` (
                                                `name_id` mediumint(8) NOT NULL AUTO_INCREMENT UNIQUE,
                                                `name` varchar(24) NOT NULL UNIQUE,
                                                `type` TINYINT(3) NOT NULL,
@@ -7,8 +7,8 @@ CREATE TABLE `playerbots_arena_team_names` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Playerbot arena team names';
 
 
-DELETE FROM `playerbots_arena_team_names`;
-INSERT INTO `playerbots_arena_team_names` (`name_id`,`name`, `type`) VALUES
+DELETE FROM `cortex_arena_team_names`;
+INSERT INTO `cortex_arena_team_names` (`name_id`,`name`, `type`) VALUES
 (NULL, 'Out of Coverage',2),
 (NULL, 'Beauty and the Beast',2),
 (NULL, 'Dead or Alive',2),

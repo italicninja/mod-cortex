@@ -270,17 +270,17 @@ namespace
 
 void BotProfessions::LoadConfig()
 {
-    sEnabled = sConfigMgr->GetOption<bool>("Playerbots.Professions.Enable", false);
-    sMinLevel = sConfigMgr->GetOption<uint32>("Playerbots.Professions.MinLevel", 5);
-    sAlchemyFloor = sConfigMgr->GetOption<float>("Playerbots.Professions.AlchemyFloor", 0.15f);
-    sEnchantingFloor = sConfigMgr->GetOption<float>("Playerbots.Professions.EnchantingFloor", 0.12f);
-    sGathering = sConfigMgr->GetOption<bool>("Playerbots.Professions.Gather", true);
-    sGatherRange = std::clamp(sConfigMgr->GetOption<float>("Playerbots.Professions.GatherRange", 70.0f), 10.0f, 100.0f);
-    sGatherCooldown = sConfigMgr->GetOption<uint32>("Playerbots.Professions.GatherCooldown", 60);
-    sGatherTracking = sConfigMgr->GetOption<bool>("Playerbots.Professions.GatherTracking", true);
-    sDisenchant = sConfigMgr->GetOption<bool>("Playerbots.Professions.Disenchant", true);
-    sMill = sConfigMgr->GetOption<bool>("Playerbots.Professions.Mill", true);
-    sToolReservePct = std::min<uint32>(sConfigMgr->GetOption<uint32>("Playerbots.Professions.ToolReservePct", 50), 100);
+    sEnabled = sConfigMgr->GetOption<bool>("Cortex.Bots.Professions.Enable", false);
+    sMinLevel = sConfigMgr->GetOption<uint32>("Cortex.Bots.Professions.MinLevel", 5);
+    sAlchemyFloor = sConfigMgr->GetOption<float>("Cortex.Bots.Professions.AlchemyFloor", 0.15f);
+    sEnchantingFloor = sConfigMgr->GetOption<float>("Cortex.Bots.Professions.EnchantingFloor", 0.12f);
+    sGathering = sConfigMgr->GetOption<bool>("Cortex.Bots.Professions.Gather", true);
+    sGatherRange = std::clamp(sConfigMgr->GetOption<float>("Cortex.Bots.Professions.GatherRange", 70.0f), 10.0f, 100.0f);
+    sGatherCooldown = sConfigMgr->GetOption<uint32>("Cortex.Bots.Professions.GatherCooldown", 60);
+    sGatherTracking = sConfigMgr->GetOption<bool>("Cortex.Bots.Professions.GatherTracking", true);
+    sDisenchant = sConfigMgr->GetOption<bool>("Cortex.Bots.Professions.Disenchant", true);
+    sMill = sConfigMgr->GetOption<bool>("Cortex.Bots.Professions.Mill", true);
+    sToolReservePct = std::min<uint32>(sConfigMgr->GetOption<uint32>("Cortex.Bots.Professions.ToolReservePct", 50), 100);
 }
 
 bool BotProfessions::Enabled() { return sEnabled; }

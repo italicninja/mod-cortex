@@ -60,7 +60,7 @@ bool enabled = false;
 std::mutex deathMutex;
 std::unordered_map<ObjectGuid::LowType, std::vector<Death>> deaths;
 
-void ReadConfig() { enabled = sConfigMgr->GetOption<bool>("Playerbots.NewRpgDangerZones", false); }
+void ReadConfig() { enabled = sConfigMgr->GetOption<bool>("Cortex.Bots.NewRpgDangerZones", false); }
 }  // namespace
 
 bool Enabled()

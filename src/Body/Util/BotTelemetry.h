@@ -31,7 +31,7 @@ struct BotTelemetryState
 };
 
 // Structured event log for tuning bot behaviour. Rows are batched and written asynchronously to
-// acore_playerbots.playerbots_telemetry, then pruned after Playerbots.Telemetry.RetentionHours.
+// acore_cortex.cortex_telemetry, then pruned after Cortex.Bots.Telemetry.RetentionHours.
 // Safe to call from map threads: no queries, one mutex around the batch.
 //
 // Events (column use):
@@ -60,7 +60,7 @@ public:
         SAMPLE_NEAR_PLAYER = 0x40,
         SAMPLE_RANDOM_BOT = 0x80,
         SAMPLE_IN_FLIGHT = 0x100,
-        SAMPLE_EXT_ARM = 0x200,  // in an extension's A/B arm (PlayerbotsExtensions telemetry provider)
+        SAMPLE_EXT_ARM = 0x200,  // in Cortex's A/B arm (Cortex::InArm)
     };
 
     static BotTelemetry& instance();
@@ -73,7 +73,7 @@ public:
     void Update(PlayerbotAI* botAI);
     // Called from the player update hook for every player; does nothing for bots or when tracing is off.
     void PlayerTrace(Player* player);
-    // Reads Playerbots.Telemetry.PlayerTraceMs (called from PlayerbotAIConfig::Initialize).
+    // Reads Cortex.Bots.Telemetry.PlayerTraceMs (called from PlayerbotAIConfig::Initialize).
     static void LoadConfig();
 
     static char const* StatusName(uint32 status);

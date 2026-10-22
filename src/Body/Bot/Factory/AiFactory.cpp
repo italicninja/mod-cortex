@@ -17,7 +17,7 @@
 #include "PlayerbotAI.h"
 #include "PlayerbotAIConfig.h"
 #include "Playerbots.h"
-#include "PlayerbotsExtensions.h"
+#include "CortexBody.h"
 #include "PriestAiObjectContext.h"
 #include "ReactionEngine.h"
 #include "RogueAiObjectContext.h"
@@ -497,7 +497,7 @@ void AiFactory::AddDefaultCombatStrategies(Player* player, PlayerbotAI* const fa
         engine->addStrategy("boost", false);
     }
 
-    PlayerbotsExtensions::CombatStrategies(player, facade, engine);
+    Cortex::AddCombatStrategies(player, facade, engine);
 }
 
 Engine* AiFactory::createCombatEngine(Player* player, PlayerbotAI* const facade, AiObjectContext* aiObjectContext)
@@ -716,7 +716,7 @@ void AiFactory::AddDefaultNonCombatStrategies(Player* player, PlayerbotAI* const
         }
     }
 
-    PlayerbotsExtensions::NonCombatStrategies(player, facade, nonCombatEngine);
+    Cortex::AddNonCombatStrategies(player, facade, nonCombatEngine);
 }
 
 Engine* AiFactory::createNonCombatEngine(Player* player, PlayerbotAI* const facade, AiObjectContext* aiObjectContext)

@@ -11,10 +11,10 @@
 
 class Player;
 
-// Long walks along the travel node graph (Playerbots.NewRpgRoutes).
+// Long walks along the travel node graph (Cortex.Bots.NewRpgRoutes).
 //
 // mmap answers a far destination with a partial path to the explored poly nearest to it, which is a dead end
-// whenever the real way starts by heading off (out of a bowl, a cave, around a ridge). The playerbots_travelnode
+// whenever the real way starts by heading off (out of a bowl, a cave, around a ridge). The cortex_travelnode
 // tables hold a walk graph between towns, camps and POIs with precomputed point paths; new rpg's MoveFarTo follows
 // a route over it when mmap alone can't reach the destination. Loaded on a background thread at startup; until
 // then, and with the setting off, nothing changes.
@@ -38,7 +38,7 @@ bool NextWaypoint(Player* bot, float x, float y, float z, Point& out, bool& adva
 void Reroute(Player* bot);
 void Forget(Player* bot);
 
-// What bots learned (death and stuck heat, edge strikes) survives restarts in Playerbots.NewRpgLearnFile: restored
+// What bots learned (death and stuck heat, edge strikes) survives restarts in Cortex.Bots.NewRpgLearnFile: restored
 // once the graph is loaded, saved every 10 minutes (UpdateLearned, world thread) and on shutdown (SaveLearned).
 void UpdateLearned(uint32 diff);
 void SaveLearned();
