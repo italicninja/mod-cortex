@@ -795,10 +795,10 @@ namespace
 
 void Cortex::LoadConfig()
 {
-    sEnabled = sConfigMgr->GetOption<bool>("Cortex.Enable", false);
-    float ratio = std::clamp(sConfigMgr->GetOption<float>("Cortex.Ratio", 0.5f), 0.0f, 1.0f);
+    sEnabled = sConfigMgr->GetOption<bool>("Cortex.Enable", true);
+    float ratio = std::clamp(sConfigMgr->GetOption<float>("Cortex.Ratio", 1.0f), 0.0f, 1.0f);
     sRatioPermille = static_cast<uint32>(ratio * 1000.0f + 0.5f);
-    sActing = sConfigMgr->GetOption<bool>("Cortex.Act", false);
+    sActing = sConfigMgr->GetOption<bool>("Cortex.Act", true);
     sPerception = sConfigMgr->GetOption<bool>("Cortex.Perception", true);
     sPerceiveMs = std::max<uint32>(500, sConfigMgr->GetOption<uint32>("Cortex.PerceiveMs", 2000));
     sSightRange = std::clamp(sConfigMgr->GetOption<float>("Cortex.SightRange", 100.0f), 20.0f, 150.0f);

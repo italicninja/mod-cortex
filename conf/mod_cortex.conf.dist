@@ -4,19 +4,19 @@
 
 [worldserver]
 
-# Cortex: a player-like AI for random bots, run as an A/B arm next to playerbots' "new rpg" strategy.
-# Design: docs/bot-ai-overhaul.md in the wowproject repo.
+# Cortex: the player-like brain of the random bots (src/), driving the body ported from playerbots (src/Body).
+# Design: docs/bot-ai-overhaul.md and docs/cortex-standalone.md in the wowproject repo.
 
-# Random bots whose GUID hashes below Ratio are in the Cortex arm (stable across restarts and resets);
-# telemetry samples carry flag 512 (SAMPLE_EXT_ARM) for them.
-# Default: 0 (disabled), 0.5
-Cortex.Enable = 0
-Cortex.Ratio = 0.5
+# Random bots whose GUID hashes below Ratio run Cortex (stable across restarts and resets); the rest run the
+# body's own "new rpg" strategy, as an A/B control. Telemetry samples carry flag 512 (SAMPLE_EXT_ARM) for Cortex bots.
+# Default: 1 (enabled), 1.0 (every random bot)
+Cortex.Enable = 1
+Cortex.Ratio = 1.0
 
 # With Act = 1 the arm drops "new rpg" and "grind" and runs the "cortex" strategy (the quest loop). With 0 the
 # arm keeps new-rpg and only perceives and remembers (an A/A test).
-# Default: 0
-Cortex.Act = 0
+# Default: 1
+Cortex.Act = 1
 
 # Arm bots perceive (sight within SightRange yd, line of sight past 30 yd) every PerceiveMs and remember what
 # they saw, killed, looted and died to, and quests they gave up on. Memory is saved to the playerbots database
