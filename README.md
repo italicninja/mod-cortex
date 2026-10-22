@@ -2,20 +2,20 @@
 
 # mod-cortex
 
-**A player-like brain for mod-playerbots' random bots**
+**Player-like bots for AzerothCore**
 
-It knows how to play the game, not the world. Each bot learns the world from what it sees, and plans its quests the
+They know how to play the game, not the world. Each bot learns the world from what it sees, and plans its quests the
 way a player reads them.
 
 ![AzerothCore](https://img.shields.io/badge/AzerothCore-3.3.5a-1f6feb)
-![mod-playerbots](https://img.shields.io/badge/mod--playerbots-wowproject%20series-8250df)
 ![Client](https://img.shields.io/badge/client-12340-555)
 ![License](https://img.shields.io/badge/license-GPL--2.0-green)
 
 <img src="docs/images/cortex-vs-control.png" alt="Two line charts, Cortex versus control, 19 to 21 October 2026: levels gained per bot-hour, Cortex around 0.1 and control around 0.05; quest turn-ins per bot-hour, Cortex 0.2 to 0.65 and control 0.1 to 0.25" width="900">
 
-<sub>From the live realm's telemetry: 34,000 Cortex bot-hours against 11,800 control bot-hours. Over these days Cortex
-bots gained levels 1.8× as fast and turned in 2.4× as many quests, with 14% fewer deaths.</sub>
+<sub>From the live realm's telemetry, before every bot moved to Cortex: 34,000 Cortex bot-hours against 11,800
+control bot-hours on the simpler "new rpg" strategy. Cortex bots gained levels 1.8× as fast and turned in 2.4× as
+many quests, with 14% fewer deaths.</sub>
 
 </div>
 
@@ -29,12 +29,13 @@ bots gained levels 1.8× as fast and turned in 2.4× as many quests, with 14% fe
 | **Looks after itself** | It buys food and water, repairs and trains at NPCs it remembers, binds at inns, hearths, tames a pet, gathers and conjures. |
 | **Travels** | It takes known flights, boats and zeppelins, lifts, portals and the hearthstone, planned over a hand-made link table. Routes avoid places where it died lately, and zones where it has seen hostile mobs well above its level. |
 | **Comes back from death** | It runs back to its corpse, waits out a camped graveyard, and steps away from the mobs before sitting down. A bot that keeps dying, or dies to mobs far above it, hearths out. |
-| **Plays its class** | A caster shoots its wand rather than spend its last mana. A holy priest levels as shadow. Bags are cleared of what has no use and no price. |
+| **Plays its class** | Class rotations for all nine classes. A caster shoots its wand rather than spend its last mana. A holy priest levels as shadow. Bags are cleared of what has no use and no price. |
+| **Plays with you** | Bots join a player's party, follow, assist and take a role; classic raids (Molten Core, Onyxia, BWL, AQ20) and battlegrounds have their own tactics. |
 
 ## How it works
 
-Cortex runs as one arm of an A/B split (`Cortex.Ratio` of random bots). The other arm keeps playerbots' own "new rpg"
-strategy, so every change is measured against it on the same server.
+Two halves: the **brain** (`src/`) decides what a bot wants to do, the **body** (`src/Body/`) runs the bots and
+carries it out (sessions and the random bot population, movement, combat, looting, group play).
 
 ```mermaid
 flowchart LR
@@ -44,66 +45,47 @@ flowchart LR
     N -- errand --> S
     Q --> S[Step<br>work, hand in, pick up, grind]
     S --> T[Travel<br>walk, flight, boat, lift,<br>portal, hearth]
-    S --> C[Combat<br>playerbots' class AI<br>+ cortex combat]
+    S --> C[Combat<br>class rotations<br>+ cortex combat]
     C -- death --> R[Corpse run<br>regroup, hearth out]
     R --> M
 ```
 
-- **One arm, one switch.** `Cortex.Enable` assigns bots to the arm and perceives. `Cortex.Act` swaps "new rpg" and
-  "grind" for the "cortex" strategy. With `Act` off the arm only watches (an A/A check).
-- **On top of playerbots.** Combat, looting, spells and movement stay playerbots'. Cortex adds strategies, actions
-  and per-bot ticks through playerbots' extension hooks, and calls playerbots' own upkeep, trainer, auction and
-  gathering actions when its memory has nothing better.
-- **Telemetry.** Every decision writes a row to `playerbots_telemetry` (state `c:<goal>`), which drives the bot
-  reports and the A/B numbers.
+- **Brain and body.** The body calls the brain directly (`src/CortexBody.h`): the "cortex" strategy replaces the
+  body's simpler "new rpg" questing for every bot under `Cortex.Ratio`. When memory has nothing better, the brain
+  falls back on the body's own upkeep, trainer, auction and gathering actions.
+- **One switch.** `Cortex.Enable` turns the brain on; `Cortex.Act` lets it play (off, bots only perceive and
+  remember). A `Cortex.Ratio` below 1 keeps the rest on "new rpg", as an A/B control.
+- **Telemetry.** Every decision writes a row to `cortex_telemetry` (state `c:<goal>`), which drives the bot reports.
 
 ## Install
 
-1. Build AzerothCore 3.3.5a with [mod-playerbots](https://github.com/mod-playerbots/mod-playerbots) carrying the
-   wowproject playerbots patch series (see [Requirements](#requirements)).
-2. Clone into `azerothcore-wotlk/modules/mod-cortex` and build statically (`-DMODULES=static`). Cortex includes
-   playerbots headers directly.
-3. Apply the SQL by hand to `acore_playerbots`: `sql/playerbots_cortex_memory.sql` for a fresh database.
-   `sql/2026_10_17_00_rename_memory_table.sql` only migrates the old `playerbots_brain_memory` table.
-4. Copy `conf/mod_cortex.conf.dist` to `etc/modules/mod_cortex.conf`, then set `Cortex.Enable = 1` and
-   `Cortex.Act = 1`.
-5. Check the startup log for the `Cortex: Enable true, Ratio …` line.
+1. Use AzerothCore 3.3.5a from the [Playerbot branch](https://github.com/mod-playerbots/azerothcore-wotlk/tree/Playerbot)
+   of AzerothCore: the body needs the module database pool and navmesh settings it adds.
+2. Clone into `azerothcore-wotlk/modules/mod-cortex` and build statically (`-DMODULES=static`).
+3. Create the `acore_cortex` database (utf8mb4) for the `acore` user. On first start the updater fills it from
+   `data/sql/cortex/` and applies the world and characters updates. Then apply `sql/cortex_memory.sql` to it by hand.
+4. Copy `conf/mod_cortex.conf.dist` and `conf/mod_cortex_bots.conf.dist` to `etc/modules/` (dropping `.dist`). Set
+   `CortexDatabaseInfo` in `mod_cortex_bots.conf` (or env `AC_CORTEX_DATABASE_INFO`) and the bot count
+   (`Cortex.Bots.MinRandomBots`, `MaxRandomBots`).
+5. Check the startup log for the `Cortex: Enable true, Ratio 1.00, Act true, …` line.
 
-## Requirements
-
-Cortex compiles against helpers and actions that the wowproject mod-playerbots patch series adds, so it needs that
-series (0001–0070), not stock playerbots. The parts it calls directly:
-
-| Patch | What Cortex uses |
-|---|---|
-| `0053-extension-hooks` | PlayerbotsExtensions: strategy, action, trigger and value contexts, non-combat strategies, bot tick, quest filter, telemetry provider |
-| `0066-corpse-runs` | `AddCorpseRunFilter`: the arm's bots run to their corpse instead of the random-bot revive teleport |
-| `0069-combat-strategies-hook` | `OnCombatStrategies`: "cortex combat" (wands) |
-| `0003-bot-telemetry`, `0039-player-trace` | `BotTelemetry` |
-| `0005`, `0006`, `0014`, `0021`, `0068` | new rpg recover and upkeep, `rpgInfo` |
-| `0011-auction-house`, `0070-first-wand` | `BotAuction`, "new rpg auction" |
-| `0020`, `0025`, `0034`, `0035` | `BotDanger` |
-| `0048`, `0054`–`0062` | `BotProfessions`, "bot craft", trainers and reagents |
-| `0058-class-quests-and-pet-food` | `HunterPetFood` |
-| `0060`, `0061` | `NewRpgGatherAction`, "new rpg gather" |
-| `0064-capital-arrivals`, `0067` | `BotLevels` |
-
-Recommended, not required: core patch `0010-unlinked-slivers` (pathfinding off one-poly mesh strips). Cortex's island
-escape handles what it misses.
+Upgrading from a setup that kept bot data in `acore_playerbots`: `sql/2026_10_22_01_rename_core_tables.sql` before
+the first start, and `sql/2026_10_22_00_rename_to_cortex.sql` with the worldserver stopped.
 
 ## Configuration
 
-`etc/modules/mod_cortex.conf`. Each key is documented in the `.dist` file.
+`etc/modules/mod_cortex.conf` (the brain) and `etc/modules/mod_cortex_bots.conf` (the body, `Cortex.Bots.*`). Each
+key is documented in its `.dist` file.
 
 | Key | Default | What |
 |---|---|---|
-| `Cortex.Enable` / `Ratio` | `0` / `0.5` | The arm and its share of random bots (our realm: `0.75`) |
-| `Cortex.Act` | `0` | The arm plays with Cortex (`0`: watches only) |
+| `Cortex.Enable` / `Ratio` | `1` / `1.0` | The brain, and the share of random bots it runs |
+| `Cortex.Act` | `1` | Bots play with Cortex (`0`: they only perceive and remember) |
 | `Cortex.Perception` / `PerceiveMs` / `SightRange` | `1` / `2000` / `100` | How often and how far a bot looks |
 | `Cortex.SaveMinutes` | `5` | Memory save interval (and at shutdown) |
 | `Cortex.Tame`, `Gather`, `Sparkles` | `1` | Hunters tame; gathering detours; quest objects |
 | `Cortex.Watchdog` / `Escape` | `1` | Idle and stuck watchdog; off-mesh island escape |
-| `Cortex.CorpseRun` | `1` | `0` off, `1` the arm, `2` both arms |
+| `Cortex.CorpseRun` | `1` | Run back to the corpse instead of the random-bot revive teleport |
 | `Cortex.Regroup` | `1` | Step away from the mobs after a revive; hearth out of death loops |
 | `Cortex.Wand` / `TidyBags` / `Talents` | `1` | Wand below 50% mana; clear useless unsellable items; holy priests level as shadow |
 | `Cortex.Travel` (`.Flights`, `.LearnFlights`, `.CrossMap`, `.Hearth`) | `1` | Trips other than walking |
@@ -114,14 +96,19 @@ described next to their keys.
 
 ## Commands
 
-None. Cortex is driven by config and observed through telemetry: the wowproject bot report (`docs/bot-monitoring.md`)
-turns `playerbots_telemetry` into the A/B tables.
+GM commands are under `.playerbots` (e.g. `.playerbots rndbot`). Players give their bots chat commands
+("follow", "attack", …). The brain itself has none: it is driven by config and observed through telemetry.
 
 ## Status
 
-Live on a private realm since 2026-10-17, with 750 of 1000 random bots in the arm, levelling solo through the old
-world. Groups and dungeons are still playerbots'. The design and the milestone log (`docs/bot-ai-overhaul.md`,
-`plan.md` Phase 3b) live in the wowproject repo, where the module was developed until 2026-10-21.
+Live on a private classic realm (expansion 0, level cap 60): every random bot runs Cortex since 2026-10-22, levelling
+solo through the old world. Party play, raids and battlegrounds work but have seen little testing. The design and the
+milestone log (`docs/bot-ai-overhaul.md`, `docs/cortex-standalone.md`) live in the wowproject repo.
+
+## Credits
+
+The body began as [mod-playerbots](https://github.com/mod-playerbots/mod-playerbots) and its authors' work
+(`src/Body/AUTHORS.md`); see `src/Body/README.md`.
 
 ## License
 

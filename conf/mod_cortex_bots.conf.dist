@@ -1,17 +1,18 @@
 ##################################################
-# CORTEX BOTS CONFIGURATION FILE (the body, ported from playerbots.conf; keys Cortex.Bots.*)
+# CORTEX BOTS CONFIGURATION FILE (the bot body; keys Cortex.Bots.*)
 ##################################################
 
 # Overview
 # "Randombot": randomly generated bots that log in separately from players and populate the world. Randombots may automatically grind, quest, level up, and upgrade equipment and can be invited to groups and given commands.
 # "AddClass bot": bots from the AddClassAccountPoolSize accounts. They are used for quickly adding a leveled and geared bot of any class to your party. They are recommended for a quick formation of a party.
 # "Altbot": characters created on player accounts, which may be logged in by the player and invited to groups and given commands like randombots. They are best suited for long-progression playthroughs.
-# Information about commands to control bots and set their strategies can be found on the wiki at https://github.com/mod-playerbots/mod-playerbots/wiki/Playerbot-Commands.
+# GM commands to manage bots are under .playerbots (e.g. .playerbots rndbot); players control their bots with chat
+# commands (e.g. "follow", "attack", "rebuff").
 
 ####################################################################################################
 # SECTION INDEX
 #   GENERAL SETTINGS
-#    PLAYERBOTS SETTINGS
+#    BOT SETTINGS
 #        GENERAL
 #        SUMMON OPTIONS
 #        MOUNT
@@ -63,7 +64,7 @@
 #        WARLOCK
 #        DRUID
 #    RAIDS
-#    PLAYERBOTS SYSTEM SETTINGS
+#    BOT SYSTEM SETTINGS
 #        DATABASE & CONNECTIONS
 #        DEBUG
 #        CHAT SETTINGS
@@ -79,7 +80,7 @@
 
 ####################################################################################################
 
-# Enable or disable Playerbots module
+# Enable or disable the bots
 Cortex.Bots.Enabled = 1
 
 # Enable randombot system
@@ -122,7 +123,7 @@ Cortex.Bots.DisabledWithoutRealPlayerLogoutDelay = 300
 
 ###################################
 #                                 #
-# PLAYERBOTS SETTINGS             #
+# BOT SETTINGS                    #
 #                                 #
 ###################################
 
@@ -647,7 +648,7 @@ Cortex.Bots.AutoGearScoreLimit = 0
 Cortex.Bots.BotCheats = "food,taxi,raid"
 
 # List of attunement quests (comma-separated list of quest IDs) that are automatically completed for all bots.
-# While mod-playerbots does not restore removed attunement requirements, other mods, such as mod-individual-progression, may do so.
+# While Cortex does not restore removed attunement requirements, other mods, such as mod-individual-progression, may do so.
 # This is meant to exclude bots from such requirements.
 #
 # Defaults:
@@ -867,7 +868,7 @@ Cortex.Bots.RandomBotXPRate = 1.0
 #     over time.
 #
 #   - Level Reset: when a random bot reaches a configured max level, resets it back down to a lower
-#     level via a full PlayerbotFactory randomize, with an optional percent chance (optionally
+#     level via a full bot factory randomize, with an optional percent chance (optionally
 #     scaled by level), an optional minimum played-time restriction, and an optional "skip" that
 #     sends a bot straight to a different level as soon as it reaches a configured trigger level.
 #
@@ -902,7 +903,7 @@ Cortex.Bots.LevelBrackets.CheckFlaggedFrequency = 15
 Cortex.Bots.LevelBrackets.FlaggedProcessLimit = 5
 
 # When enabled, bots in a guild led by a real (non-bot) player are excluded from bot bracket
-# calculations and will not be level changed or flagged. Backed by the shared PlayerbotGuildMgr
+# calculations and will not be level changed or flagged. Backed by the shared bot guild manager
 # guild cache (validated at startup and refreshed hourly), which also covers offline players; a
 # guild counts as real when its leader is not a random-bot account.
 # Default: 1 (enabled)
@@ -929,7 +930,7 @@ Cortex.Bots.LevelBrackets.ExcludeNames =
 #
 # IMPORTANT: If you extend the number of brackets beyond 9, you must add configuration lines for
 #            the additional bracket lines below (e.g. Range10, Range11, etc.) to both your
-#            playerbots.conf and this playerbots.conf.dist. Ensure that the sum of the Pct values
+#            mod_cortex_bots.conf and this mod_cortex_bots.conf.dist. Ensure that the sum of the Pct values
 #            for each faction remains 100.
 Cortex.Bots.LevelBrackets.NumRanges = 9
 
@@ -1154,7 +1155,7 @@ Cortex.Bots.ResetBotLevel.MinTimePlayed = 86400
 Cortex.Bots.ResetBotLevel.PlayedTimeCheckFrequency = 864
 
 # When enabled, bots in a guild led by a real (non-bot) player are excluded from level reset
-# processing. Backed by the same shared PlayerbotGuildMgr guild cache used by
+# processing. Backed by the same shared bot guild manager cache used by
 # Cortex.Bots.LevelBrackets.IgnoreGuildBotsWithRealPlayers (validated at startup and refreshed
 # hourly), which also covers offline players; a guild counts as real when its leader is not a
 # random-bot account.
@@ -2695,7 +2696,7 @@ Cortex.Bots.EnableICCBuffs = 1
 
 ###################################
 #                                 #
-# PLAYERBOTS SYSTEM SETTINGS      #
+# BOT SYSTEM SETTINGS             #
 #                                 #
 ###################################
 
@@ -2703,14 +2704,14 @@ Cortex.Bots.EnableICCBuffs = 1
 # DATABASE & CONNECTIONS
 #
 #    CortexDatabaseInfo
-#        Description: Database connection settings for the playerbots server.
+#        Description: Database connection settings for the Cortex database.
 #        Example:     "hostname;port;username;password;database"
 #                     ".;somenumber;username;password;database" - (Use named pipes on Windows
 #                                                                 "enable-named-pipe" to [mysqld]
 #                                                                 section my.ini)
 #                     ".;/path/to/unix_socket;username;password;database" - (use Unix sockets on
 #                                                                           Unix/Linux)
-#        Default:     "127.0.0.1;3306;acore;acore;acore_cortex"       - (PlayerbotDatabaseInfo)
+#        Default:     "127.0.0.1;3306;acore;acore;acore_cortex"
 
 CortexDatabaseInfo = "127.0.0.1;3306;acore;acore;acore_cortex"
 
@@ -2718,19 +2719,19 @@ CortexDatabaseInfo = "127.0.0.1;3306;acore;acore;acore_cortex"
 #        Description: The amount of worker threads spawned to handle asynchronous (delayed) MySQL
 #                     statements. Each worker thread is mirrored with its own connection to the
 #                     MySQL server and their own thread on the MySQL server.
-#        Default:     1 - (PlayerbotsDatabase.WorkerThreads)
+#        Default:     1
 
 CortexDatabase.WorkerThreads     = 1
 
 #    CortexDatabase.SynchThreads
 #        Description: The amount of MySQL connections spawned to handle synchronous (blocking) MySQL
 #                     statements.
-#        Default:     1 - (PlayerbotsDatabase.SynchThreads)
+#        Default:     1
 
 CortexDatabase.SynchThreads     = 1
 
 #    Cortex.Bots.Updates.EnableDatabases
-#        Description: Determined if updates system work with playerbots database.
+#        Description: Determined if updates system work with the Cortex database.
 #
 #        Default:     1  - (Enabled)
 #                     0  - (Disabled)
