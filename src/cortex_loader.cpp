@@ -12,7 +12,7 @@ void AddCortexBodyScripts();
 void AddCortexScripts();
 
 // The version this source is tagged with in https://github.com/italicninja/mod-cortex (bump it with each tag).
-constexpr char const* CORTEX_VERSION = "v0.1.0";
+constexpr char const* CORTEX_VERSION = "v0.2.0";
 
 namespace
 {
